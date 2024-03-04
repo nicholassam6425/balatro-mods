@@ -4,11 +4,18 @@
     consumable cards)
 ]]
 
+patched_use_consumeable = false
 patched_spectral_collection = false
 mod_id = "center_hook"
 mod_name = "Center Hook"
-mod_version = "0.2"
+mod_version = "0.3"
 mod_author = "arachnei"
+
+--get rid of debug messages if user doesnt have devtools
+if (sendDebugMessage == nil) then
+    sendDebugMessage = function(_)
+    end
+end
 function initCenterHook()
     local centerHook = {}
 
@@ -158,7 +165,9 @@ function initCenterHook()
         "omit"
     }
 
-    function centerHook:addJoker(id, name, order, discovered, cost, pos, effect, config, desc, rarity, unlocked)
+    centerHook.consumeableEffects = {}
+
+    function centerHook:addJoker(id, name, order, unlocked, discovered, cost, pos, effect, config, desc, rarity, blueprint_compat, eternal_compat, no_pool_flag, yes_pool_flag, unlock_condition)
         --defaults
         id = id or "j_Joker_Placeholder" .. #G.P_CENTER_POOLS["Joker"] + 1
         name = name or "Joker Placeholder"
@@ -171,20 +180,30 @@ function initCenterHook()
         desc = desc or {"Placeholder"}
         rarity = rarity or 1
         unlocked = unlocked or true
-    
+        blueprint_compat = blueprint_compat or false
+        eternal_compat = eternal_compat or false
+        no_pool_flag = no_pool_flag or nil
+        yes_pool_flag = yes_pool_flag or nil
+        unlock_condition = unlock_condition or nil
+        
         --joker object
         local newJoker = {
             order = order,
             discovered = discovered,
             cost = cost,
-            consumeable = true,
+            consumeable = false,
             name = name,
             pos = pos,
             set = "Joker",
             config = config,
             key = id, 
             rarity = rarity, 
-            unlocked = unlocked
+            unlocked = unlocked,
+            blueprint_compat = blueprint_compat,
+            eternal_compat = eternal_compat,
+            no_pool_flag = no_pool_flag,
+            yes_pool_flag = yes_pool_flag,
+            unlock_condition = unlock_condition
         }
     
         --add it to all the game tables
@@ -200,6 +219,7 @@ function initCenterHook()
             newJokerText.name_parsed[#newJokerText.name_parsed+1] = loc_parse_string(line)
         end
         G.localization.descriptions.Joker[id] = newJokerText
+
         return newJoker, newJokerText
     end
 
@@ -227,11 +247,9 @@ function initCenterHook()
             config = config
         }
         newPlanet.key = id
-        sendDebugMessage(newPlanet)
         table.insert(G.P_CENTER_POOLS['Planet'], newPlanet)
         table.insert(G.P_CENTER_POOLS['Consumeables'], newPlanet)
         table.insert(G.P_CENTER_POOLS['Tarot_Planet'], newPlanet)
-        sendDebugMessage(G.P_CENTER_POOLS['Planet'])
         return
     end
     --[[
@@ -293,6 +311,7 @@ function initCenterHook()
             newSpectralText.name_parsed[#newSpectralText.name_parsed+1] = loc_parse_string(line)
         end
         G.localization.descriptions.Spectral[id] = newSpectralText
+
         return newSpectral, newSpectralText
     end
 
@@ -310,27 +329,13 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == 'left' then
-                sendDebugMessage(excractFunctionBody("functions/UI_definitions.lua", "create_UIBox_your_collection_spectrals"))
+                G.update_spectral_pack(nil)
             end
         end,
         on_enable = function()
+
+            --fix the spectral collection tab being all around terrible
             if not patched_spectral_collection then
-                --[[
-                    attempting to understand spectral collection tab
-                    its "create_UIBox_your_collection_spectrals()" in "functions/UI_definitions.lua"
-                    -----
-                    G.your_collection is the 'playmats' that display the cards, gonna type it as G.yc from now on
-                    G.yc[1] is 4 cards wide, G.yc[2] is 5 cards wide
-                    I THINK deck_tables is how the function passes G.yc to the ui box
-                    the j, #G.yc nested for loop is to populate G.yc with cards
-                    spectral_options is related to the pages. im pretty sure it
-                    basically just tells the ui box how many pages there are
-                    -----
-                    THE ISSUE lies in the fact that when calculating spectral_options,
-                    it uses the wrong center_pools, as seen below. but the code injections
-                    below dont actually end up changing the ui box. i have no clue why.
-                    if you figure it out lmk!!
-                ]]
                 local to_replace = "math.floor"
                 local replacement = "math.ceil"
                 local fun_name = "create_UIBox_your_collection_spectrals"
@@ -347,7 +352,19 @@ table.insert(mods,
                 inject(file_name, fun_name, to_replace, replacement)
 
                 patched_spectral_collection = true
-                
+            end
+
+            --add modded use_consumable table to the game
+            if not patched_use_consumeable then
+                local replacement = [[local used_tarot = copier or self
+                for _, effect in ipairs(centerHook.consumeableEffects) do
+                    effect(self)
+                end
+                ]]
+                local to_replace = [[local used_tarot = copier or self]]
+                local fun_name = "Card:use_consumeable"
+                local file_name = "card.lua"
+                inject(file_name, fun_name, to_replace, replacement)
             end
         end
     }
