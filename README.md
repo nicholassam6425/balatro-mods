@@ -1,6 +1,6 @@
 # arachnei's balatro mods
 
-requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master)
+requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from
 
 - [Center Hook](#center-hook)
 - [Quick Restart](#quick-restart)
