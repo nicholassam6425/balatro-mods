@@ -74,7 +74,7 @@ G.E_MANAGER:add_event(Event({
 ## Contexts
 Used in Card:calculate_joker. Defines what event is happening during the game.
 
-Example usage in (Test Joker)[#test-joker]
+Example usage in [Test Joker](#test-joker)
 contexts:
 - context.open_booster (hallucination)
 - context.buying_card ()
