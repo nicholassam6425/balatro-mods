@@ -36,7 +36,7 @@ An example spectral card that gives you $100 on use.
 ## Test Joker
 An example joker card that gives all played cards +1 mult
 
-![]()
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/j_testexample.gif)
 
 # Useful Documentation
 
