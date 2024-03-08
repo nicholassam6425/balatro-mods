@@ -7,6 +7,10 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
 - [Bezos](#bezos)
 - [Test Joker](#test-joker)
 - [Useful Documentation](#useful-documentation)
+    - ['Cheating' in a Joker](#cheating-in-a-joker)
+    - [Contexts](#contexts)
+    - [Unlock Conditions](#unlock-conditions)
+    - [Joker.config](#jokerconfig)
 
 # Mods/APIs
 
