@@ -10,8 +10,10 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
 
 # Mods/APIs
 
-## Center Hook
-center_hook.lua
+## Center Hook (apis/center_hook.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
 
 An api/hook to add center cards (card back, joker, voucher, booster pack, editions, card type, consumable cards) to the game.
 
@@ -21,8 +23,10 @@ See mods/c_bezos.lua for an example of how to implement a consumeable card.
 
 See mods/j_test.lua for an example of how to implement a joker card.
 
-## Quick Restart
-quickrestart.lua
+## Quick Restart (mods/quickrestart.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ✔️ |
 
 Quickly reroll ante 1 tags by clicking f2.
 
@@ -32,15 +36,19 @@ You may remove the ante 1 restriction for your own installation if you wish.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/quickrestartexample.gif)
 
-## Bezos
-c_bezos.lua
+## Bezos (mods/c_bezos.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
 
 An example spectral card that gives you $100 on use.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/bezosexample.PNG)
 
-## Test Joker
-j_test.lua
+## Test Joker (mods/j_test.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
 
 An example joker card that gives all played cards +1 mult
 
@@ -74,8 +82,7 @@ G.E_MANAGER:add_event(Event({
 ## Contexts
 Used in Card:calculate_joker. Defines what event is happening during the game.
 
-Example usage in [Test Joker](#test-joker)
-contexts:
+Example usage in [Test Joker](#test-joker).
 - `context.open_booster` (hallucination)
 - `context.buying_card` ()
 - `context.selling_self` (luchador, diet cola, invisible joker)
@@ -108,9 +115,9 @@ contexts:
 - `context.other_joker` (to reference the current joker in scoring) (baseball card)
 
 ## Unlock Conditions
-Pre-defined joker unlock conditions
+Pre-defined joker unlock conditions. *OPTIONAL*. Only use these if you want your joker to have an unlock condition.
 
-All the `"strings"` are unlock 'types', the sub-points are what goes along with the unlock type
+All the `"strings"` are unlock 'types', the sub-points are what goes along with the unlock type.
 
 Example: `{unlock_condition = {type = 'modify_jokers', extra = {polychrome = true, count = 2}}}`
 - `"modify_jokers"`: add enhancements to jokers (Bootstraps)
