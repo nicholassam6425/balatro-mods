@@ -205,7 +205,7 @@ function initCenterHook()
 
 
     --wip wip wip
-    function centerHook:addJoker(id, name, use_effect, order, unlocked, discovered, cost, pos, effect, config, desc, rarity, blueprint_compat, eternal_compat, no_pool_flag, yes_pool_flag, unlock_condition)
+    function centerHook:addJoker(id, name, use_effect, order, unlocked, discovered, cost, pos, effect, config, desc, rarity, blueprint_compat, eternal_compat, no_pool_flag, yes_pool_flag, unlock_condition, alerted)
         --defaults
         id = id or "j_Joker_Placeholder" .. #G.P_CENTER_POOLS["Joker"] + 1
         name = name or "Joker Placeholder"
@@ -224,6 +224,7 @@ function initCenterHook()
         no_pool_flag = no_pool_flag or nil
         yes_pool_flag = yes_pool_flag or nil
         unlock_condition = unlock_condition or nil
+        alerted = alerted or true
         
         --joker object
         local newJoker = {
@@ -242,7 +243,8 @@ function initCenterHook()
             eternal_compat = eternal_compat,
             no_pool_flag = no_pool_flag,
             yes_pool_flag = yes_pool_flag,
-            unlock_condition = unlock_condition
+            unlock_condition = unlock_condition, 
+            alerted = true
         }
     
         --add it to all the game tables
