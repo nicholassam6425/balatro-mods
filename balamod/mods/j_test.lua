@@ -29,7 +29,7 @@ table.insert(mods,
     enabled = true,
     on_post_update = function()
         if not patched then
-            centerHook.addJoker(self, 'j_test_arachnei', 'Test Joker', jokerEffect, nil, true, true, 1, nil, nil, {mult = 1}, {"Played cards", "gain {C:red}+1{} Mult"}, 1, true, true, nil, nil, nil)
+            centerHook.addJoker(self, 'j_test_arachnei', 'Test Joker', jokerEffect, nil, true, true, 1, nil, nil, {mult = 1}, {"Played cards", "gain {C:red}+1{} Mult"}, 1, true, true, nil, nil, nil, true)
             patched = true
         end
     end
