@@ -170,11 +170,11 @@ Commonly used to store numerical values of your joker, such as bonus mult. (Usin
 
 i.e Misprint's config is {extra = {max = 23, min = 0}}. The following are variables in config that are NOT in extra. (70% of the time these variables just get put in extra anyways lmfao)
 
-mult: int: multiplier additive bonus
-extra: table: put anything else you want in here
-t_mult: int: multiplier additive bonus when a certain hand type is played
-t_chips: int: the chips additive bonus when a certain hand type is played
-type: str: the hand type for t_mult or t_chips to apply ('Pair', 'Three of a Kind', 'Four of a Kind', 'Straight', 'Flush')
-Xmult: float: multiplier multiplicative bonus
-h_size: int: Juggler's bonus to hand size (can be negative)
-d_size: int: Drunkard's bonus to discards (maybe can be negative)
+- `mult`: int: multiplier additive bonus
+- `extra`: table: put anything else you want in here
+- `t_mult`: int: multiplier additive bonus when a certain hand type is played
+- `t_chips`: int: the chips additive bonus when a certain hand type is played
+- `type`: str: the hand type for t_mult or t_chips to apply ('Pair', 'Three of a Kind', 'Four of a Kind', 'Straight', 'Flush')
+- `Xmult`: float: multiplier multiplicative bonus
+- `h_size`: int: Juggler's bonus to hand size (can be negative)
+- `d_size`: int: Drunkard's bonus to discards (maybe can be negative)
