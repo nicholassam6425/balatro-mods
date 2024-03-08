@@ -76,84 +76,87 @@ Used in Card:calculate_joker. Defines what event is happening during the game.
 
 Example usage in [Test Joker](#test-joker)
 contexts:
-- context.open_booster (hallucination)
-- context.buying_card ()
-- context.selling_self (luchador, diet cola, invisible joker)
-- context.selling_card (campfire)
-- context.reroll_shop (flash card)
-- context.ending shop (perkeo)
-- context.skip_blind (throwback)
-- context.skipping_booster (red card)
-- context.playing_card_added (hologram)
-- context.first_hand_drawn (certificate, dna, trading card, chicot, madness, burglar, riff-raff, cartomancer, ceremonial dagger, marble joker)
-- context.destroying_card (sixth sense)
-- context.cards_destroyed (caino, glass joker)
-- context.remove_playing_cards (caino, glass joker)
-- context.using_consumeable (glass joker{hanged man only}, fortune teller, constellation)
-- context.debuffed_hand (matador)
-- context.pre_discard (burnt joker)
-- context.discard (ramen, trading card, castle, mail-in rebate, hit the road, green joker, yorick, faceless joker)
-- context.end_of_round (campfire, rocket, turtle bean, invisible joker, popcorn, egg, gift card, hit the road, gros michel, cavendish, mr. bones)
-- context.individual (I THINK this is used for scoring a card)
-    - context.repetition (I THINK used for repetitions) (mime, sock and buskin, hanging chad, dusk, seltzer, hack)
-    - context.cardarea (used to compare to G.hand (hand cards), G.play (cards in play), G.jokers (jokers))
-        - G.hand (mime, shoot the moon, baron, reserved parking, raised fist)
-        - G.play (hiker, lucky cat, wee joker, photograph, the idol, scary face, smiley face, golden ticket, scholar, walkie talkie, business card, fibonacci, even steven, odd todd, suit mult, rough gem, onyx agate, arrowhead, bloodstone, ancient joker, triboulet, sock and buskin, hanging chad, dusk, seltzer, hack)
-        - G.joker 
-            - context.before (activate this BEFORE scoring this hand) (spare trousers, space joker, square joker, runner, midas mask, vampire, to do list, DNA, ride the bus, obelisk, green joker)
-            - context.after (activate this AFTER scoring this hand) (ice cream, seltzer)
-            - else {neither context.before nor context.after} (if your joker gives a bonus when scored, define it here) (loyalty card, seeing double, half joker, abstract joker, acrobat, mystic summit, misprint, banner, stuntman, matador, supernova, ceremonial dagger, 8 ball, vagabond, superposition, seance, flower pot, wee joker, castle, blue joker, erosion, square joker, runner, ice cream, stone joker, steel joker, bull, driver's license, blackboard, joker stencil, swashbuckler, joker, spare trousers, ride the bus, flash card, popcorn, green joker, fortune teller, gros michel, cavendish, red card, card sharp, bootstraps, caino, yorick)
-- context.game_over (mr. bones)
-- context.other_card (to reference the current card in scoring)
-- context.other_joker (to reference the current joker in scoring) (baseball card)
+- `context.open_booster` (hallucination)
+- `context.buying_card` ()
+- `context.selling_self` (luchador, diet cola, invisible joker)
+- `context.selling_card` (campfire)
+- `context.reroll_shop` (flash card)
+- `context.ending shop` (perkeo)
+- `context.skip_blind` (throwback)
+- `context.skipping_booster` (red card)
+- `context.playing_card_added` (hologram)
+- `context.first_hand_drawn` (certificate, dna, trading card, chicot, madness, burglar, riff-raff, cartomancer, ceremonial dagger, marble joker)
+- `context.destroying_card` (sixth sense)
+- `context.cards_destroyed` (caino, glass joker)
+- `context.remove_playing_cards` (caino, glass joker)
+- `context.using_consumeable` (glass joker{hanged man only}, fortune teller, constellation)
+- `context.debuffed_hand` (matador)
+- `context.pre_discard` (burnt joker)
+- `context.discard` (ramen, trading card, castle, mail-in rebate, hit the road, green joker, yorick, faceless joker)
+- `context.end_of_round` (campfire, rocket, turtle bean, invisible joker, popcorn, egg, gift card, hit the road, gros michel, cavendish, mr. bones)
+- `context.individual` (I THINK this is used for scoring a card)
+    - `context.repetition` (I THINK used for repetitions) (mime, sock and buskin, hanging chad, dusk, seltzer, hack)
+    - `context.cardarea` (used to compare to G.hand (hand cards), G.play (cards in play), G.jokers (jokers))
+        - `G.hand` (mime, shoot the moon, baron, reserved parking, raised fist)
+        - `G.play` (hiker, lucky cat, wee joker, photograph, the idol, scary face, smiley face, golden ticket, scholar, walkie talkie, business card, fibonacci, even steven, odd todd, suit mult, rough gem, onyx agate, arrowhead, bloodstone, ancient joker, triboulet, sock and buskin, hanging chad, dusk, seltzer, hack)
+        - `G.joker`
+            - `context.before` (activate this BEFORE scoring this hand) (spare trousers, space joker, square joker, runner, midas mask, vampire, to do list, DNA, ride the bus, obelisk, green joker)
+            - `context.after` (activate this AFTER scoring this hand) (ice cream, seltzer)
+            - `else` {neither `context.before` nor `context.after`} (if your joker gives a bonus when scored, define it here) (loyalty card, seeing double, half joker, abstract joker, acrobat, mystic summit, misprint, banner, stuntman, matador, supernova, ceremonial dagger, 8 ball, vagabond, superposition, seance, flower pot, wee joker, castle, blue joker, erosion, square joker, runner, ice cream, stone joker, steel joker, bull, driver's license, blackboard, joker stencil, swashbuckler, joker, spare trousers, ride the bus, flash card, popcorn, green joker, fortune teller, gros michel, cavendish, red card, card sharp, bootstraps, caino, yorick)
+- `context.game_over` (mr. bones)
+- `context.other_card` (to reference the current card in scoring)
+- `context.other_joker` (to reference the current joker in scoring) (baseball card)
 
 ## Unlock Conditions
 Pre-defined joker unlock conditions
 
-- "modify_jokers": add enhancements to jokers (Bootstraps)
-    - extra:
-        - "polychrome": bool: check for polychrome modifiers
-        - "count": int: number of modifiers to look for
-- "c_cards_sold": sell centers (Burnt Joker)
-    - extra: int: number of centers sold
-- "discover_amount": discover cards in the following collections (Astronomer, Cartomancer)
-    - "planet_count": how many planets
-    - "tarot_count": how many tarots
-- "modify_deck": modify playing cards (Driver's License, Glass Joker, Onyx Agate, Arrowhead, Bloodstone, Rough Gem, Smeared Joker)
-    - extra:
-        - count: int: how many modified playing cards
-        - tally: str: 'total', all modification types
-        - enhancement: str: 'Glass Card' 'Wild Card', type of modification
-        - e_key: str: 'm_glass' 'm_wild', the P_CENTER key of the modification
-        - suit: str: Suit of cards in the deck
-- "play_all_hearts": play all heart cards in your deck in 1 round (Shoot the Moon)
-- "money":  have a certain amount of money (Sateillite)
-    - extra: int: amount of money
-- "discard_custom": discard a certain hand type (unsure how to define) (Brainstorm, Hit the Road)
-- "win_custom": win while doing a certain thing (unsure how to define) (Invisible Joker, Blueprint)
-- "chip_score": play a hand that gives a certain amount of chips (Stuntman, The Idol, Oops! All 6s)
-    - "chips": int: the amount of chips to have to unlock
-- "win_no_hand": win without playing a certain hand type (The Duo, The Trio, The Family, The Order, The Tribe)
-    - extra: str: define the hand type that was not played: 'Pair', 'Three of a Kind', 'Four of a Kind', 'Straight', 'Flush'
-- "hand_contents": play a certain hand (Seeing Double, Golden Ticket)
-    - extra: str: the hand: 'four 7 of Clubs' 'Gold'(5 gold cards)
-- "win": win within a certain number of rounds (Merry Andy, Wee Joker)
-    - n_rounds: int: the amount of rounds to win before
-- "ante_up": reach a certain ante (Flower Pot, Showman)
-    - ante: int: the ante to reach
-- "round_win": win in 1 round with no discards(Matador)
-    - extra: 'High Card', adds condition of certain hand type (Hanging Chad)
-    - extra: int: win in 1 round this many times (this might allow discards) (Troubadour)
-- "continue_game": Continue a saved run from the main menu (Throwback)
-- "double_gold": Have a gold seal on a gold card (Certificate)
-- "c_jokers_sold": Sell jokers (Swashbuckler)
-    - extra: int: how many jokers
-- "c_face_cards_played": play face cards (Sock and Buskin)
-    - extra: int: how many face cards
-- "c_hands_played": play hands (Acrobat)
-    - extra: int: how many hands
-- "c_losses": lose runs (Mr. Bones)
-    - extra: int: how many runs
+All the `"strings"` are unlock 'types', the sub-points are what goes along with the unlock type
+
+Example: `{unlock_condition = {type = 'modify_jokers', extra = {polychrome = true, count = 2}}}`
+- `"modify_jokers"`: add enhancements to jokers (Bootstraps)
+    - `extra`:
+        - `"polychrome"`: bool: check for polychrome modifiers
+        - `"count"`: int: number of modifiers to look for
+- `"c_cards_sold"`: sell centers (Burnt Joker)
+    - `extra`: int: number of centers sold
+- `"discover_amount"`: discover cards in the following collections (Astronomer, Cartomancer)
+    - `"planet_count"`: how many planets
+    - `"tarot_count"`: how many tarots
+- `"modify_deck"`: modify playing cards (Driver's License, Glass Joker, Onyx Agate, Arrowhead, Bloodstone, Rough Gem, Smeared Joker)
+    - `extra`:
+        - `count`: int: how many modified playing cards
+        - `tally`: str: 'total', all modification types
+        - `enhancement`: str: 'Glass Card' 'Wild Card', type of modification
+        - `e_key`: str: 'm_glass' 'm_wild', the P_CENTER key of the modification
+        - `suit`: str: Suit of cards in the deck
+- `"play_all_hearts"`: play all heart cards in your deck in 1 round (Shoot the Moon)
+- `"money"`:  have a certain amount of money (Sateillite)
+    - `extra`: int: amount of money
+- `"discard_custom"`: discard a certain hand type (unsure how to define) (Brainstorm, Hit the Road)
+- `"win_custom"`: win while doing a certain thing (unsure how to define) (Invisible Joker, Blueprint)
+- `"chip_score"`: play a hand that gives a certain amount of chips (Stuntman, The Idol, Oops! All 6s)
+    - `chips`: int: the amount of chips to have to unlock
+- `"win_no_hand"`: win without playing a certain hand type (The Duo, The Trio, The Family, The Order, The Tribe)
+    - `extra`: str: define the hand type that was not played: 'Pair', 'Three of a Kind', 'Four of a Kind', 'Straight', 'Flush'
+- `"hand_contents"`: play a certain hand (Seeing Double, Golden Ticket)
+    - `extra`: str: the hand: 'four 7 of Clubs' 'Gold'(5 gold cards)
+- `"win`": win within a certain number of rounds (Merry Andy, Wee Joker)
+    - `n_rounds`: int: the amount of rounds to win before
+- `"ante_up"`: reach a certain ante (Flower Pot, Showman)
+    - `ante`: int: the ante to reach
+- `"round_win"`: win in 1 round with no discards(Matador)
+    - `extra`: 'High Card', adds condition of certain hand type (Hanging Chad)
+    - `extra`: int: win in 1 round this many times (this might allow discards) (Troubadour)
+- `"continue_game"`: Continue a saved run from the main menu (Throwback)
+- `"double_gold"`: Have a gold seal on a gold card (Certificate)
+- `"c_jokers_sold"`: Sell jokers (Swashbuckler)
+    - `extra`: int: how many jokers
+- `"c_face_cards_played"`: play face cards (Sock and Buskin)
+    - `extra`: int: how many face cards
+- `"c_hands_played"`: play hands (Acrobat)
+    - `extra`: int: how many hands
+- `"c_losses"`: lose runs (Mr. Bones)
+    - `extra`: int: how many runs
 
 ## Joker.config
 Commonly used to store numerical values of your joker, such as bonus mult. (Using config is optional, **I THINK**)
