@@ -146,7 +146,7 @@ function initCenterHook()
             eternal_compat = eternal_compat,
             no_pool_flag = no_pool_flag,
             yes_pool_flag = yes_pool_flag,
-            unlock_condition = unlock_condition
+            unlock_condition = unlock_condition,
             alerted = alerted
         }
     
