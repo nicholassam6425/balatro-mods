@@ -2,10 +2,12 @@
 
 requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from
 
-- [Center Hook](#center-hook)
-- [Quick Restart](#quick-restart)
-- [Bezos](#bezos)
-- [Test Joker](#test-joker)
+- [Mods & APIs](#modsapis)
+    - [Center Hook](#center-hook)
+    - [Quick Restart](#quick-restart)
+    - [Bezos](#bezos)
+    - [Test Joker](#test-joker)
+    - [Humanity](#humanity)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a Joker](#cheating-in-a-joker)
     - [Contexts](#contexts)
@@ -57,6 +59,15 @@ An example spectral card that gives you $100 on use.
 An example joker card that gives all played cards +1 mult
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/j_testexample.gif)
+
+## Humanity (mods/c_humanity.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+An example tarot card that averages the ranks of selected cards
+
+![]()
 
 # Useful Documentation
 
