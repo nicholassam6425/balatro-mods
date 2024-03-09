@@ -67,7 +67,7 @@ An example joker card that gives all played cards +1 mult
 
 An example tarot card that averages the ranks of selected cards
 
-![]()
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/c_humanityexample.gif)
 
 # Useful Documentation
 
