@@ -14,7 +14,7 @@ local patched = false
         effect(self)
     end
 ]]
-function consumeableEffect(card) 
+local function consumeableEffect(card) 
     if card.ability.name == "Bezos" then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('timpani')
@@ -32,7 +32,7 @@ end
         end
     end
 ]]
-function consumeableCondition(card)
+local function consumeableCondition(card)
     if card.ability.name == "Bezos" then
         return true
     else return false end
@@ -45,10 +45,7 @@ table.insert(mods,
     author = mod_author,
     enabled = true,
     --you can also forego the patched var and use on_enable instead, this one is just mildly easier to debug
-    on_post_update = function()
-        if not patched then
-            centerHook.addSpectral(self, "c_bezos", "Bezos", consumeableEffect, consumeableCondition, nil, true, 4, nil, nil, {"Gain $100"})
-            patched = true
-        end
+    on_enable = function()
+        local spectral, text = centerHook.addSpectral(self, "c_bezos", "Bezos", consumeableEffect, consumeableCondition, nil, true, 4, nil, nil, {"Gain $100"}, true)
     end
 })

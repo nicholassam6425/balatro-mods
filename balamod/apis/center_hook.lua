@@ -81,7 +81,9 @@ function initCenterHook()
     centerHook.consumeableEffects = {}
     centerHook.canUseConsumeable = {}
     centerHook.jokerEffects = {}
-
+    centerHook.jokers = {}
+    centerHook.tarots = {}
+    centerHook.spectrals = {}
 
     --[[
         params:
@@ -112,6 +114,7 @@ function initCenterHook()
         name = name or "Joker Placeholder"
         use_effect = use_effect or function(_) end
         order = order or #G.P_CENTER_POOLS["Joker"] + 1
+        unlocked = unlocked or true
         discovered = discovered or true
         cost = cost or 4
         pos = pos or { x = 9, y = 9 } --blank joker sprite
@@ -164,12 +167,13 @@ function initCenterHook()
         end
         G.localization.descriptions.Joker[id] = newJokerText
 
-        table.insert(centerHook.jokerEffects, use_effect)        
+        table.insert(centerHook.jokerEffects, use_effect)
+        table.insert(centerHook.jokers, name)
 
         return newJoker, newJokerText
     end
 
-    function addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos,  config, desc)
+    function centerHook:addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos,  config, desc, alerted)
         id = id or "c_tarot_placeholder" .. #G.P_CENTER_POOLS["Tarot"] + 1
         name = name or "Tarot Placeholder"
         use_effect = use_effect or function(_) end
@@ -179,6 +183,7 @@ function initCenterHook()
         pos = pos or {x=6, y=2} -- blank tarot sprite
         config = config or {}
         desc = desc or {""}
+        alerted = alerted or true
 
         local newTarot = {
             order = order,
@@ -190,13 +195,16 @@ function initCenterHook()
             set = "Tarot",
             effect = "",
             cost_mult = 1.0,
-            config = config
+            config = config,
+            alerted = alerted,
+            key = id
         }
 
         --add tarot to all the game tables
         table.insert(G.P_CENTER_POOLS["Tarot"], newTarot)
         table.insert(G.P_CENTER_POOLS["Tarot_Planet"], newTarot)
         table.insert(G.P_CENTER_POOLS["Consumeables"], newTarot)
+        G.P_CENTERS[id] = newTarot
 
         --add name + description to localization tables
         local newTarotText = {name=name, text=desc, text_parsed={}, name_parsed={}}
@@ -210,6 +218,7 @@ function initCenterHook()
 
         table.insert(centerHook.consumeableEffects, use_effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
+        table.insert(centerHook.tarots, name)
 
         return newTarot, newTarotText
     end
@@ -261,7 +270,7 @@ function initCenterHook()
             newSpectral: the spectral card table
             newSpectralText: the spectral card text table
     ]]
-    function centerHook:addSpectral(id, name, effect, use_condition, order, discovered, cost, pos, config, desc)
+    function centerHook:addSpectral(id, name, effect, use_condition, order, discovered, cost, pos, config, desc, alerted)
         --defaults
         id = id or "c_spec_placeholder" .. #G.P_CENTER_POOLS["Spectral"] + 1
         name = name or "Spectral Placeholder"
@@ -271,6 +280,7 @@ function initCenterHook()
         pos = pos or { x = 5, y = 2 } --blank spectral sprite
         config = config or {}
         desc = desc or {"Placeholder"}
+        alerted = alerted or true
 
         --spectral object
         local newSpectral = {
@@ -283,7 +293,8 @@ function initCenterHook()
             set = "Spectral",
             config = config,
             key = id,
-            effect = ""
+            effect = "",
+            alerted = alerted
         }
 
         --add it to all the game tables
@@ -300,10 +311,11 @@ function initCenterHook()
             newSpectralText.name_parsed[#newSpectralText.name_parsed+1] = loc_parse_string(line)
         end
         G.localization.descriptions.Spectral[id] = newSpectralText
-        
+
         --add use effect + use conditions
         table.insert(centerHook.consumeableEffects, effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
+        table.insert(centerHook.spectrals, name)
 
         return newSpectral, newSpectralText
     end
@@ -322,6 +334,20 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == "right" then
+                sendDebugMessage("Jokers")
+                for i, v in ipairs(centerHook.jokers) do
+                    sendDebugMessage("- "..v)
+                end
+                sendDebugMessage("")
+                sendDebugMessage("Tarots")
+                for i, v in ipairs(centerHook.tarots) do
+                    sendDebugMessage("- "..v)
+                end
+                sendDebugMessage("")
+                sendDebugMessage("Spectrals")
+                for i, v in ipairs(centerHook.spectrals) do
+                    sendDebugMessage("- "..v)
+                end
             end
         end,
         on_post_update = function()
@@ -374,13 +400,14 @@ table.insert(mods,
 
             --add modded can_use_consumeable conditions to the game
             if not patched_can_use_consumeable then
-                local replacement = [[any_state then
+                local replacement = [[return false end
                 for _, condition in ipairs(centerHook.canUseConsumeable) do
+                    sendDebugMessage(tostring(condition))
                     if condition(self) then
                         return condition(self)
                     end
                 end]]
-                local to_replace = [[any_state then]]
+                local to_replace = [[return false end]]
                 local fun_name = "Card:can_use_consumeable"
                 local file_name = "card.lua"
                 inject(file_name, fun_name, to_replace, replacement)
@@ -392,8 +419,9 @@ table.insert(mods,
                 local to_replace = "if context.open_booster then"
                 local replacement = [[
             for i, effect in ipairs(centerHook.jokerEffects) do
-                if effect(self, context) then
-                    return effect(self, context)
+                local temp_effect = effect(self, context)
+                if temp_effect then
+                    return temp_effect
                 end
             end
             if context.open_booster then]]

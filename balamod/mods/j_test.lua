@@ -1,6 +1,6 @@
 local mod_id = "j_test_arachnei"
 local mod_name = "Test Joker"
-local mod_version = "0.5"
+local mod_version = "1.0"
 local mod_author = "arachnei"
 local patched = false
 
@@ -12,7 +12,7 @@ local patched = false
         end
     end
 ]]
-function jokerEffect(card, context)
+local function jokerEffect(card, context)
     if card.ability.name == 'Test Joker' and context.individual and context.cardarea == G.play then 
         return {
             mult = card.ability.mult,
@@ -27,10 +27,7 @@ table.insert(mods,
     version = mod_version,
     author = mod_author,
     enabled = true,
-    on_post_update = function()
-        if not patched then
-            centerHook.addJoker(self, 'j_test_arachnei', 'Test Joker', jokerEffect, nil, true, true, 1, nil, nil, {mult = 1}, {"Played cards", "gain {C:red}+1{} Mult"}, 1, true, true, nil, nil, nil, true)
-            patched = true
-        end
+    on_enable = function()
+        centerHook.addJoker(self, 'j_test_arachnei', 'Test Joker', jokerEffect, nil, true, true, 1, nil, nil, {mult = 1}, {"Played cards", "gain {C:red}+1{} Mult"}, 1, true, true, nil, nil, nil, true)
     end
 })
