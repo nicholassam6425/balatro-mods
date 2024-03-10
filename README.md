@@ -3,11 +3,11 @@
 requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from
 
 - [Mods & APIs](#modsapis)
-    - [Center Hook](#center-hook)
-    - [Quick Restart](#quick-restart)
-    - [Bezos](#bezos)
-    - [Test Joker](#test-joker)
-    - [Humanity](#humanity)
+    - [Center Hook](#center-hook-apiscenter_hooklua)
+    - [Quick Restart](#quick-restart-modsquickrestartlua)
+    - [Bezos](#bezos-modsc_bezoslua)
+    - [Test Joker](#test-joker-modsj_testlua)
+    - [Humanity](#humanity-modsc_humanitylua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a Joker](#cheating-in-a-joker)
     - [Contexts](#contexts)
@@ -47,6 +47,8 @@ You may remove the ante 1 restriction for your own installation if you wish.
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
 An example spectral card that gives you $100 on use.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/bezosexample.PNG)
@@ -56,6 +58,8 @@ An example spectral card that gives you $100 on use.
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
 An example joker card that gives all played cards +1 mult
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/j_testexample.gif)
@@ -64,6 +68,8 @@ An example joker card that gives all played cards +1 mult
 | Balamod | Steamodded |
 | ------- | ---------- |
 | ✔️ | ❌ |
+
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 An example tarot card that averages the ranks of selected cards
 
