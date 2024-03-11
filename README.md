@@ -28,7 +28,7 @@ An api/hook to add center cards (card back, joker, voucher, booster pack, editio
 
 See mods/c_bezos.lua for an example of how to implement a consumeable card.
 
-See mods/j_test.lua for an example of how to implement a joker card.
+See mods/j_jokers.lua or mods/j_sols.lua for an example of how to implement a joker card.
 
 ## Quick Restart (mods/quickrestart.lua)
 | Balamod | Steamodded |
