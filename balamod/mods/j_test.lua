@@ -29,5 +29,8 @@ table.insert(mods,
     enabled = true,
     on_enable = function()
         centerHook.addJoker(self, 'j_test_arachnei', 'Test Joker', jokerEffect, nil, true, true, 1, nil, nil, {mult = 1}, {"Played cards", "gain {C:red}+1{} Mult"}, 1, true, true, nil, nil, nil, true)
+    end,
+    on_disable = function()
+        centerHook.removeJoker(self, "j_test_arachnei")
     end
 })

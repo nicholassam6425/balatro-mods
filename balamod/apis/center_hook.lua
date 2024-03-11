@@ -78,14 +78,35 @@ function initCenterHook()
         "omit"
     }
 
+    --tables of various functions
     centerHook.consumeableEffects = {}
     centerHook.canUseConsumeable = {}
     centerHook.jokerEffects = {}
+
+    --keep track of added centers for removing
     centerHook.jokers = {}
     centerHook.tarots = {}
     centerHook.spectrals = {}
 
     --[[
+        remove given joker from the game
+
+        inputs:
+            id: string
+        returns:
+            nil
+    ]]
+    function centerHook:removeJoker(id)
+        table.remove(G.P_CENTER_POOLS["Joker"], centerHook.jokers[id].pool_indices[1])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Joker[id] = nil
+        table.remove(centerHook.jokerEffects, centerHook.jokers[id].use_indices[1])
+        centerHook.jokers[id] = nil
+    end
+
+    --[[
+        add joker card, as well as given parameters, to the game
+
         params:
             id: string
             name: string
@@ -95,7 +116,7 @@ function initCenterHook()
             cost: int
             pos: {x:int, y:int} or nil
             effect: string
-            config: table
+            config: table (Read Useful Documentation in the readme for help)
             desc: table of strings
             rarity: int, 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
             blueprint_compat: bool
@@ -168,12 +189,53 @@ function initCenterHook()
         G.localization.descriptions.Joker[id] = newJokerText
 
         table.insert(centerHook.jokerEffects, use_effect)
-        table.insert(centerHook.jokers, name)
-
+        table.insert(centerHook.jokers, {name=name, id=id})
+        centerHook.jokers[id] = {
+            pool_indices={#G.P_CENTER_POOLS["Joker"]}, 
+            use_indices={#centerHook.jokerEffects}
+        }
         return newJoker, newJokerText
     end
 
-    function centerHook:addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos,  config, desc, alerted)
+    --[[
+        remove given tarot from the game
+
+        params:
+            id: string
+        return:
+            nil
+    ]]
+    function centerHook:removeTarot(id)
+        table.remove(G.P_CENTER_POOLS["Tarot"], centerHook.tarots[id].pool_indices[1])
+        table.remove(G.P_CENTER_POOLS["Tarot_Planet"], centerHook.tarots[id].pool_indices[2])
+        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.tarots[id].pool_indices[3])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Tarot[id] = nil
+        table.remove(centerHook.consumeableEffects, centerHook.tarots[id].use_indices[1])
+        table.remove(centerHook.canUseConsumeable, centerHook.tarots[id].use_indices[2])
+        centerHook.tarots[id] = nil
+    end
+
+    --[[
+        add tarot, as well as given parameters, to the games
+
+        params:
+            id: string
+            name: string
+            use_effect: function
+            use_condition: function
+            order: int
+            discovered: bool
+            cost: int
+            pos: {x:int, y:int}
+            config: table
+            desc: table of strings
+            alerted: bool
+        returns:
+            newTarot: the tarot card table
+            newTarotText: the tarot card text table
+    ]]
+    function centerHook:addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted)
         id = id or "c_tarot_placeholder" .. #G.P_CENTER_POOLS["Tarot"] + 1
         name = name or "Tarot Placeholder"
         use_effect = use_effect or function(_) end
@@ -218,7 +280,12 @@ function initCenterHook()
 
         table.insert(centerHook.consumeableEffects, use_effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
-        table.insert(centerHook.tarots, name)
+
+        --save indices to centerhook for removal
+        centerHook.tarots[id] = {
+            pool_indices={#G.P_CENTER_POOLS["Tarot"], #G.P_CENTER_POOLS["Tarot_Planet"], #G.P_CENTER_POOLS["Consumeables"]}, 
+            use_indices={#centerHook.consumeableEffects, #centerHook.canUseConsumeable}
+        }
 
         return newTarot, newTarotText
     end
@@ -253,8 +320,29 @@ function initCenterHook()
         return
     end
     ]]
+
     --[[
-        param:
+        remove given spectral card from the game
+
+        params:
+            id: string
+        returns:
+            nil
+    ]]
+    function centerHook:removeSpectral(id)
+        table.remove(G.P_CENTER_POOLS["Spectral"], centerHook.spectrals[id].pool_indices[1])
+        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.spectrals[id].pool_indices[2])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Spectral[id] = nil
+        table.remove(centerHook.consumeableEffects, centerHook.spectrals[id].use_indices[1])
+        table.remove(centerHook.canUseConsumeable, centerHook.spectrals[id].use_indices[2])
+        centerHook.spectrals[id] = nil
+    end
+
+    --[[
+        add given spectral card, and given parameters, to the game
+
+        params:
             id: string
             name: string
             effect: function
@@ -265,7 +353,6 @@ function initCenterHook()
             pos: {x:int, y:int} or nil 
             config: table
             desc: table of strings
-
         returns:
             newSpectral: the spectral card table
             newSpectralText: the spectral card text table
@@ -315,7 +402,17 @@ function initCenterHook()
         --add use effect + use conditions
         table.insert(centerHook.consumeableEffects, effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
-        table.insert(centerHook.spectrals, name)
+
+        --save indices to centerhook for removal
+        centerHook.spectrals[id] = {
+            pool_indices = {#G.P_CENTER_POOLS["Spectral"], #G.P_CENTER_POOLS["Consumeables"]},
+            use_indices = {#centerHook.consumeableEffects, #centerHook.canUseConsumeable}
+        }
+
+        sendDebugMessage(id)
+        for i, v in pairs(centerHook.spectrals[id].pool_indices) do
+            sendDebugMessage(tostring(i).." : "..tostring(v))
+        end
 
         return newSpectral, newSpectralText
     end

@@ -66,27 +66,10 @@ table.insert(mods, {
     version = mod_version,
     author = mod_author,
     enabled = true,
-    on_enable = function ()
+    on_enable = function()
         local newTarot, tarotText = centerHook:addTarot("c_humanity", "Humanity", consumeableEffect, consumeableCondition, nil, true, 3, nil, {max_highlighted = 3}, {"Select up to {C:attention}3{}", "cards. Set their rank", "to their average"}, true)
     end,
-    on_key_pressed = function(key_name)
-        if key_name == 'left' then
-            local joker_id = "c_humanity"
-            local c1 = create_card("Spectral", G.consumeables, nil, 1, true, false, joker_id, nil)
-            c1.area = G.jokers
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.1,
-                func = function()
-                c1.area:remove_card(c1)
-                c1:add_to_deck()
-                G.consumeables:emplace(c1)
-
-                G.CONTROLLER:save_cardarea_focus('jokers')
-                G.CONTROLLER:recall_cardarea_focus('jokers')
-                return true
-                end
-            }))
-        end
+    on_disable = function()
+        centerHook.removeTarot(self, "c_humanity")
     end
 })

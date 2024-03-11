@@ -47,5 +47,8 @@ table.insert(mods,
     --you can also forego the patched var and use on_enable instead, this one is just mildly easier to debug
     on_enable = function()
         local spectral, text = centerHook.addSpectral(self, "c_bezos", "Bezos", consumeableEffect, consumeableCondition, nil, true, 4, nil, nil, {"Gain $100"}, true)
+    end,
+    on_disable = function()
+        centerHook.removeSpectral(self, "c_bezos")
     end
 })
