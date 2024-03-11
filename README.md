@@ -6,7 +6,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Center Hook](#center-hook-apiscenter_hooklua)
     - [Quick Restart](#quick-restart-modsquickrestartlua)
     - [Bezos](#bezos-modsc_bezoslua)
-    - [Test Joker](#test-joker-modsj_testlua)
+    - [Jokers](#jokers-modsj_jokerslua)
     - [Humanity](#humanity-modsc_humanitylua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a Joker](#cheating-in-a-joker)
@@ -51,18 +51,18 @@ You may remove the ante 1 restriction for your own installation if you wish.
 
 An example spectral card that gives you $100 on use.
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/bezosexample.PNG)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_bezos.gif)
 
-## Test Joker (mods/j_test.lua)
+## Jokers (mods/j_jokers.lua)
 | Balamod | Steamodded |
 | ------- | ---------- |
 | ✔️ | ❌ |
 
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
-An example joker card that gives all played cards +1 mult
+An example joker card that gives all played cards +2 mult
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/j_testexample.gif)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/j_jokers.gif)
 
 ## Humanity (mods/c_humanity.lua)
 | Balamod | Steamodded |
@@ -73,12 +73,23 @@ An example joker card that gives all played cards +1 mult
 
 An example tarot card that averages the ranks of selected cards
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/c_humanityexample.gif)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_humanity.gif)
+
+## sols (mods/j_sols.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+A joker card that gives you X2 mult if the played hand contains an 8
+
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/j_sols.gif)
 
 # Useful Documentation
 
-## 'Cheating' in a joker
-Useful for debugging a specific joker
+## 'Cheating' in a card
+Useful for debugging a specific card
 
 Add a specific joker to your deck
 ```lua
@@ -92,6 +103,27 @@ G.E_MANAGER:add_event(Event({
     c1.area:remove_card(c1)
     c1:add_to_deck()
     G.jokers:emplace(c1)
+
+    G.CONTROLLER:save_cardarea_focus('jokers')
+    G.CONTROLLER:recall_cardarea_focus('jokers')
+    return true
+    end
+}))
+```
+
+Add a specific consumeable to your consumeables area
+```lua
+local c_id = "c_example_id"
+local c_set = "Tarot" -- "Spectral", "Planet", etc
+local c1 = create_card(c_set, G.consumeables, nil, 1, true, false, c_id, nil)
+c1.area = G.consumeables
+G.E_MANAGER:add_event(Event({
+    trigger = 'after',
+    delay = 0.1,
+    func = function()
+    c1.area:remove_card(c1)
+    c1:add_to_deck()
+    G.consumeables:emplace(c1)
 
     G.CONTROLLER:save_cardarea_focus('jokers')
     G.CONTROLLER:recall_cardarea_focus('jokers')
