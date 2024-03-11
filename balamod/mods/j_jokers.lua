@@ -34,7 +34,7 @@ table.insert(mods,
             nil,                --order
             true,               --unlocked
             true,               --discovered
-            1,                  --cost
+            5,                  --cost
             {x=0, y=0},                --sprite position
             nil,                --internal effect description
             {mult = 2},         --config
