@@ -67,7 +67,22 @@ table.insert(mods, {
     author = mod_author,
     enabled = true,
     on_enable = function()
-        local newTarot, tarotText = centerHook:addTarot("c_humanity", "Humanity", consumeableEffect, consumeableCondition, nil, true, 3, nil, {max_highlighted = 3}, {"Select up to {C:attention}3{}", "cards. Set their rank", "to their average"}, true)
+        local newTarot, tarotText = centerHook:addTarot(
+            "c_humanity",           --id
+            "Humanity",             --name
+            consumeableEffect,      --effect
+            consumeableCondition,   --effect condition
+            nil,                    --order
+            true,                   --discovered
+            3,                      --cost
+            {x=0,y=0},                    --sprite position
+            {max_highlighted = 3},  --config
+            {"Select up to {C:attention}3{}", "cards. Set their rank", "to their average"}, --description text
+            true,                   --collection alert
+            "assets",               --sprite path
+            "humanity tarot.png",   --sprite name
+            {px=71, py=95}          --sprite size
+        )                    
     end,
     on_disable = function()
         centerHook.removeTarot(self, "c_humanity")

@@ -9,9 +9,10 @@ local patched_use_consumeable = false
 local patched_spectral_collection = false
 local patched_joker_effects = false
 local patched_tarot_collection = false
+local patched_sprite_logic = false
 local mod_id = "center_hook_arachnei"
 local mod_name = "Center Hook"
-local mod_version = "0.4"
+local mod_version = "0.6"
 local mod_author = "arachnei"
 
 --get rid of debug messages if user doesnt have devtools
@@ -22,15 +23,15 @@ function initCenterHook()
     local centerHook = {}
 
     local sets = {
-        "Joker",
-        "Tarot",
+        "Joker",    --done
+        "Tarot",    --done
         "Planet",
-        "Spectral",
+        "Spectral", --done
         "Voucher",
-        "Back",
-        "Enhanced",
-        "Edition",
-        "Booster",
+        "Back",     --not planned
+        "Enhanced", --unsure
+        "Edition",  --unsure
+        "Booster",  
     }
 
     local jokerData = {
@@ -101,6 +102,7 @@ function initCenterHook()
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Joker[id] = nil
         table.remove(centerHook.jokerEffects, centerHook.jokers[id].use_indices[1])
+        G.ASSET_ATLAS[id] = nil
         centerHook.jokers[id] = nil
     end
 
@@ -129,7 +131,7 @@ function initCenterHook()
             newJoker: the joker card table
             newJokerText: the joker card text table
     ]]
-    function centerHook:addJoker(id, name, use_effect, order, unlocked, discovered, cost, pos, effect, config, desc, rarity, blueprint_compat, eternal_compat, no_pool_flag, yes_pool_flag, unlock_condition, alerted)
+    function centerHook:addJoker(id, name, use_effect, order, unlocked, discovered, cost, pos, effect, config, desc, rarity, blueprint_compat, eternal_compat, no_pool_flag, yes_pool_flag, unlock_condition, alerted, sprite_path, sprite_name, sprite_size)
         --defaults
         id = id or "j_Joker_Placeholder" .. #G.P_CENTER_POOLS["Joker"] + 1
         name = name or "Joker Placeholder"
@@ -150,7 +152,16 @@ function initCenterHook()
         yes_pool_flag = yes_pool_flag or nil
         unlock_condition = unlock_condition or nil
         alerted = alerted or true
-        
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or {px=71, py=95}
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
+
         --joker object
         local newJoker = {
             order = order,
@@ -171,7 +182,8 @@ function initCenterHook()
             no_pool_flag = no_pool_flag,
             yes_pool_flag = yes_pool_flag,
             unlock_condition = unlock_condition,
-            alerted = alerted
+            alerted = alerted,
+            modded_sprite = modded_sprite
         }
     
         --add it to all the game tables
@@ -188,11 +200,23 @@ function initCenterHook()
         end
         G.localization.descriptions.Joker[id] = newJokerText
 
+        --add joker sprite to sprite atlas
+        if sprite_name and sprite_path then
+            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            G.ASSET_ATLAS[id] = {}
+            G.ASSET_ATLAS[id].name = id
+            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
+            G.ASSET_ATLAS[id].px = sprite_size.px
+            G.ASSET_ATLAS[id].py = sprite_size.py
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
+
         table.insert(centerHook.jokerEffects, use_effect)
         table.insert(centerHook.jokers, {name=name, id=id})
         centerHook.jokers[id] = {
             pool_indices={#G.P_CENTER_POOLS["Joker"]}, 
-            use_indices={#centerHook.jokerEffects}
+            use_indices={#centerHook.jokerEffects},
         }
         return newJoker, newJokerText
     end
@@ -213,6 +237,7 @@ function initCenterHook()
         G.localization.descriptions.Tarot[id] = nil
         table.remove(centerHook.consumeableEffects, centerHook.tarots[id].use_indices[1])
         table.remove(centerHook.canUseConsumeable, centerHook.tarots[id].use_indices[2])
+        G.ASSET_ATLAS[id] = nil
         centerHook.tarots[id] = nil
     end
 
@@ -235,10 +260,11 @@ function initCenterHook()
             newTarot: the tarot card table
             newTarotText: the tarot card text table
     ]]
-    function centerHook:addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted)
+    function centerHook:addTarot(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
         id = id or "c_tarot_placeholder" .. #G.P_CENTER_POOLS["Tarot"] + 1
         name = name or "Tarot Placeholder"
         use_effect = use_effect or function(_) end
+        use_condition = use_condition or function(_) end
         order = order or #G.P_CENTER_POOLS["Tarot"] + 1
         discovered = discovered or true
         cost = cost or 3
@@ -246,6 +272,15 @@ function initCenterHook()
         config = config or {}
         desc = desc or {""}
         alerted = alerted or true
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or {px=71, py=95}
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
 
         local newTarot = {
             order = order,
@@ -259,7 +294,8 @@ function initCenterHook()
             cost_mult = 1.0,
             config = config,
             alerted = alerted,
-            key = id
+            key = id,
+            modded_sprite = modded_sprite
         }
 
         --add tarot to all the game tables
@@ -280,6 +316,18 @@ function initCenterHook()
 
         table.insert(centerHook.consumeableEffects, use_effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
+
+        --add tarot sprite to sprite atlas
+        if sprite_name and sprite_path then
+            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            G.ASSET_ATLAS[id] = {}
+            G.ASSET_ATLAS[id].name = id
+            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
+            G.ASSET_ATLAS[id].px = sprite_size.px
+            G.ASSET_ATLAS[id].py = sprite_size.py
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
 
         --save indices to centerhook for removal
         centerHook.tarots[id] = {
@@ -336,6 +384,7 @@ function initCenterHook()
         G.localization.descriptions.Spectral[id] = nil
         table.remove(centerHook.consumeableEffects, centerHook.spectrals[id].use_indices[1])
         table.remove(centerHook.canUseConsumeable, centerHook.spectrals[id].use_indices[2])
+        G.ASSET_ATLAS[id] = nil
         centerHook.spectrals[id] = nil
     end
 
@@ -357,10 +406,11 @@ function initCenterHook()
             newSpectral: the spectral card table
             newSpectralText: the spectral card text table
     ]]
-    function centerHook:addSpectral(id, name, effect, use_condition, order, discovered, cost, pos, config, desc, alerted)
+    function centerHook:addSpectral(id, name, effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
         --defaults
         id = id or "c_spec_placeholder" .. #G.P_CENTER_POOLS["Spectral"] + 1
         name = name or "Spectral Placeholder"
+        use_condition = use_condition or function(_) end
         order = order or #G.P_CENTER_POOLS["Spectral"] + 1
         discovered = discovered or true
         cost = cost or 4
@@ -368,6 +418,15 @@ function initCenterHook()
         config = config or {}
         desc = desc or {"Placeholder"}
         alerted = alerted or true
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or {px=71, py=95}
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
 
         --spectral object
         local newSpectral = {
@@ -381,7 +440,8 @@ function initCenterHook()
             config = config,
             key = id,
             effect = "",
-            alerted = alerted
+            alerted = alerted,
+            modded_sprite = modded_sprite
         }
 
         --add it to all the game tables
@@ -399,6 +459,18 @@ function initCenterHook()
         end
         G.localization.descriptions.Spectral[id] = newSpectralText
 
+        --add joker sprite to sprite atlas
+        if sprite_name and sprite_path and sprite_size.px and sprite_size.py then
+            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            G.ASSET_ATLAS[id] = {}
+            G.ASSET_ATLAS[id].name = id
+            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
+            G.ASSET_ATLAS[id].px = sprite_size.px
+            G.ASSET_ATLAS[id].py = sprite_size.py
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
+
         --add use effect + use conditions
         table.insert(centerHook.consumeableEffects, effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
@@ -408,11 +480,6 @@ function initCenterHook()
             pool_indices = {#G.P_CENTER_POOLS["Spectral"], #G.P_CENTER_POOLS["Consumeables"]},
             use_indices = {#centerHook.consumeableEffects, #centerHook.canUseConsumeable}
         }
-
-        sendDebugMessage(id)
-        for i, v in pairs(centerHook.spectrals[id].pool_indices) do
-            sendDebugMessage(tostring(i).." : "..tostring(v))
-        end
 
         return newSpectral, newSpectralText
     end
@@ -431,20 +498,7 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == "right" then
-                sendDebugMessage("Jokers")
-                for i, v in ipairs(centerHook.jokers) do
-                    sendDebugMessage("- "..v)
-                end
-                sendDebugMessage("")
-                sendDebugMessage("Tarots")
-                for i, v in ipairs(centerHook.tarots) do
-                    sendDebugMessage("- "..v)
-                end
-                sendDebugMessage("")
-                sendDebugMessage("Spectrals")
-                for i, v in ipairs(centerHook.spectrals) do
-                    sendDebugMessage("- "..v)
-                end
+                
             end
         end,
         on_post_update = function()
@@ -499,7 +553,6 @@ table.insert(mods,
             if not patched_can_use_consumeable then
                 local replacement = [[return false end
                 for _, condition in ipairs(centerHook.canUseConsumeable) do
-                    sendDebugMessage(tostring(condition))
                     if condition(self) then
                         return condition(self)
                     end
@@ -526,6 +579,19 @@ table.insert(mods,
                 local file_name = "card.lua"
                 inject(file_name, fun_name, to_replace, replacement)
                 patched_joker_effects = true
+            end
+
+            if not patched_sprite_logic then
+                local fun_name = "Card:set_sprites"
+                local file_name = "card.lua"
+                local to_replace = "self.children.center.states.hover = self.states.hover"
+                local replacement = [[if _center.modded_sprite then
+                    self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[_center.key], _center.pos)
+                end
+            self.children.center.states.hover = self.states.hover
+            ]]
+                inject(file_name, fun_name, to_replace, replacement)
+                patched_sprite_logic = true
             end
         end
     }
