@@ -68,7 +68,7 @@ table.insert(mods, {
     enabled = true,
     on_enable = function()
         local newTarot, tarotText = centerHook:addTarot(
-            "c_humanity",           --id
+            "c_humanity_arachnei",  --id
             "Humanity",             --name
             consumeableEffect,      --effect
             consumeableCondition,   --effect condition
@@ -85,6 +85,6 @@ table.insert(mods, {
         )                    
     end,
     on_disable = function()
-        centerHook.removeTarot(self, "c_humanity")
+        centerHook.removeTarot(self, "c_humanity_arachnei")
     end
 })

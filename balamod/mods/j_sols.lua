@@ -54,5 +54,5 @@ table.insert(mods, {
     end,
     on_disable = function()
         centerHook.removeJoker(self, "j_sols_arachnei")
-    end,
+    end
 })
