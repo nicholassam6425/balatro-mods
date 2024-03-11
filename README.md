@@ -41,7 +41,7 @@ Quickly reroll ante 1 tags by clicking f2.
 
 You may remove the ante 1 restriction for your own installation if you wish.
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/readme%20assets/quickrestartexample.gif)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/quickrestartexample.gif)
 
 ## Bezos (mods/c_bezos.lua)
 | Balamod | Steamodded |
