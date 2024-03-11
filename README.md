@@ -8,6 +8,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Bezos](#bezos-modsc_bezoslua)
     - [Jokers](#jokers-modsj_jokerslua)
     - [Humanity](#humanity-modsc_humanitylua)
+    - [sols](#sols-modsj_solslua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a Joker](#cheating-in-a-joker)
     - [Contexts](#contexts)
