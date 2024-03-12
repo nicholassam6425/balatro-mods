@@ -4,16 +4,15 @@ local mod_version = "1.0"
 local mod_author = "arachnei"
 
 local function jokerEffect(card, context)
-    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and not context.open_booster and not context.buying_card and not context.selling_self and not context.selling_card and not context.ending_shop and not context.skip_blind and not context.skipping_booster and not context.playing_card_added and not context.destroying_card and not context.cards_destroyed and not context.remove_playing_cards and not context.using_consumeable and not context.debuffed_hand and not context.end_of_round and not context.individual and not context.game_over and not context.other_card and not context.other_joker and not context.discard and not context.pre_discard then
+    --here it gets called when it shouldnt in one of these contexts, i just have no clue which. 
+    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and context.scoring_hand then
         local eights = 0
         for i = 1, #context.scoring_hand do
             if context.scoring_hand[i].base.id == 8 then eights = eights + 1 end
         end
         if eights >= 1 then
-            for i, v in pairs(card.config.center.config) do
-                sendDebugMessage(tostring(i).." : ".. tostring(v))
-            end
             return {
+                --i have no clue why Xmult isnt showing up in card.ability.xmult, so i just manually go to the config instead
                 message = localize{type='variable', key='a_xmult', vars = {card.config.center.config.Xmult}},
                 Xmult_mod = card.config.center.config.Xmult
             }
@@ -54,5 +53,23 @@ table.insert(mods, {
     end,
     on_disable = function()
         centerHook.removeJoker(self, "j_sols_arachnei")
+    end,
+    on_key_pressed = function(key_name)
+        local joker_id = "j_sols_arachnei"
+        local c1 = create_card("Joker", G.jokers, nil, 1, true, false, joker_id, nil)
+        c1.area = G.jokers
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.1,
+            func = function()
+            c1.area:remove_card(c1)
+            c1:add_to_deck()
+            G.jokers:emplace(c1)
+
+            G.CONTROLLER:save_cardarea_focus('jokers')
+            G.CONTROLLER:recall_cardarea_focus('jokers')
+            return true
+            end
+        }))
     end
 })
