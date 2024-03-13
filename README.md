@@ -88,7 +88,7 @@ An example tarot card that averages the ranks of selected cards
 
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
-A joker card that gives you X4 mult if you play at least 4 cards that contain any sequence in DISASTERMODE (5776578588)
+A joker card that gives you X4 mult if you play at least 4 cards that contain any sequence in DISASTERMODE (5776578588). The cards must be in the correct order (i.e 5776 will work, but 5677 will not)
 
 ![](https://cdn.7tv.app/emote/65a0e58ef9aa9eab719671c6/4x.webp)
 
