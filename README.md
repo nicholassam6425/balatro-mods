@@ -26,9 +26,14 @@ An api/hook to add center cards (card back, joker, voucher, booster pack, editio
 
 **DOES NOT** add the functionality of the card, just adds the card and necessary data to all the places it needs to be. 
 
-See mods/c_bezos.lua for an example of how to implement a consumeable card.
+See mods/c_bezos.lua or mods/c_humanity.lua for an example of how to implement a consumeable card.
 
 See mods/j_jokers.lua or mods/j_sols.lua for an example of how to implement a joker card.
+
+For a rundown of methods & parameters, check out 
+```lua
+
+```
 
 ## Quick Restart (mods/quickrestart.lua)
 | Balamod | Steamodded |
@@ -85,7 +90,7 @@ An example tarot card that averages the ranks of selected cards
 
 A joker card that gives you X2 mult if the played hand contains an 8
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/j_sols.gif)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/new_j_sols.gif)
 
 # Useful Documentation
 
@@ -222,7 +227,9 @@ Example: `{unlock_condition = {type = 'modify_jokers', extra = {polychrome = tru
 ## Joker.config
 Commonly used to store numerical values of your joker, such as bonus mult. (Using config is optional, **I THINK**)
 
-i.e Misprint's config is {extra = {max = 23, min = 0}}. The following are variables in config that are NOT in extra. (70% of the time these variables just get put in extra anyways lmfao)
+i.e Misprint's config is `{extra = {max = 23, min = 0}}`. The following are variables in config that are NOT in extra. 
+
+Personally, I would suggest using `config.extra` almost every time. It's more intuitive to use.
 
 - `mult`: int: multiplier additive bonus
 - `extra`: table: put anything else you want in here
@@ -232,3 +239,101 @@ i.e Misprint's config is {extra = {max = 23, min = 0}}. The following are variab
 - `Xmult`: float: multiplier multiplicative bonus
 - `h_size`: int: Juggler's bonus to hand size (can be negative)
 - `d_size`: int: Drunkard's bonus to discards (maybe can be negative)
+
+## Center Hook Documentation
+List of methods, their parameters, and what they return
+
+- centerHook.addJoker
+    adds a joker card to the game
+    - parameters:
+        - id (string): the internal name of the joker card (i.e "j_jokers_arachnei")
+            - I'd suggest adding a unique modifier to your id, like how I add my name to the end of the id to avoid easily avoidable mod conflicts.
+        - name (string): the actual name of the joker card (i.e "Jokers")
+            - This is used both for the display name of the card, as well as for how the game knows which 'card' is currently being calculated. I may separate these two values in the future to avoid mod conflicts
+        - use_effect (function): a function that describes how the joker works
+            - You must pass **THE FUNCTION**, not the result. The function **MUST** take `(card, context)` as input. Higher up in this readme is documentation on contexts, I'll be writing one for card functions soon. I'll also be writing a different section on what a joker card should return from `Card:calculate_joker`
+        - order (int): a number that describes which order to show jokers in the collection
+            - This one you can leave as `nil` if you're unsure. By doing so, it'll load jokers in by mod loading order.
+        - unlocked (bool): a boolean that describes if a joker is unlocked or not (true = unlocked)
+            - I haven't tested anything with this yet. I think it currently works in the back end, but it'll display the card sprite in the collection if you set it to locked
+        - discovered (bool): a boolean that describes if a joker is discovered or not (true = discovered)
+            - I also haven't tested anything with this. Same hypothesis as unlocked
+        - cost (int): a number that describes the cost of the joker
+        - pos (table: {x=int, y=int}): a table that describes the sprite position in the sprite sheet
+            - If you don't have a sprite, use `nil`, it'll use a placeholder sprite. x and y start at 0 in the top left. If you use individual sprites like I do, your pos will always be `{x=0,y=0}`
+        - effect (string): an *internal* description of the card effect
+            - I don't think this actually does anything for jokers. I usually leave this as `nil`, which sets it to an empty string. If you find anything, lmk
+        - config (table): a table that contains values that get loaded into `card.ability`
+            - See [Joker.config](#jokerconfig).
+        - desc (table of strings): a table of strings that contains the actual description of the card
+            - I'll write a separate section of description formatting soon. For now: `{C:attention}text{}` for cards, `{C:red}text{}` for mult, and `{C:chips}text{}` for chips. You can find all the game's descriptions in the localization folder of the decompiled game
+        - rarity (int): a number that describes the joker's rarity
+            - 1 for Common, 2 for Uncommon, 3 for Rare, 4 for Legendary. Does not support any other rarities as of right now.
+        - blueprint_compat (bool): for if blueprint/brainstorm will show as incompatible or not
+            - This only visually makes blueprint/brainstorm show as incompatible. You have to include `not context.blueprint` in your joker's conditions if you want it to actually not be copied
+        - eternal_compat (bool): for if this joker can be eternal or not
+            - I haven't tested this at all. If your joker has a sell/destroy related ability consider this paramater
+        - no_pool_flag (string): if this flag exists, the joker will not show up in game
+            - This is used for Gros Michel. I also haven't tested this either. Try looking at Gros Michel's portion in `Card:calculate_joker` for some guidance
+        - yes_pool_flag (string): if this flag doesn't exist, this joker will not show up in game
+            - Used for Cavendish. Also haven't tested this. Try looking at Gros Michel's portion in `Card:calculate_joker` for guidance
+        - unlock_condition (table): A table defining unlock conditions for the joker
+            - See [Unlock Conditions](#unlock-conditions)
+        - alerted (bool): Defines if the joker will have an alert or not in the collection
+            - Thank you HeyImKyu for finding this. 
+        - sprite_path (string)
+        - sprite_name (string)
+        - sprite_size (table {px=int, py=int})
+            > [!WARNING]
+            > You **MUST** have 1x and 2x folders in your `sprite_path` folder. 
+            - If your sprites are located in `Roaming/Balatro/assets/1x` or `Roaming/Balatro/assets/2x`, then your `sprite_path` will simply be `"assets"`. I'll look at making this more flexible in the future.
+    - returns:
+        - newJoker (table): the table that defines that card that gets loaded into the game
+        - newJokerText (table): the table that holds all the card text data
+- centerHook.removeJoker
+    remove a **modded** joker from the game
+    - parameters:
+        - id (string): the id you used to add the joker to the game
+    - returns:
+        - nothing
+- centerHook.addTarot & centerHook.addSpectral
+    adds a tarot/spectral card to the game
+
+    (yeah they're pretty much the same)
+    - parameters:
+        - id (string): the internal name of the consumeable card (i.e "c_humanity_arachnei")
+            - I'd suggest adding a unique modifier to your id, like how I add my name to the end of the id to avoid easily avoidable mod conflicts.
+         - name (string): the actual name of the consumeable card (i.e "Jokers")
+            - This is used both for the display name of the card, as well as for how the game knows which 'card' is currently being used. I may separate these two values in the future to avoid mod conflicts
+        - use_effect (function): the function that describes what happens when the card is used
+            - This function does not need a `return` inside of it. All operations done in this should be using the game's event manager to time the animations of the effect. For guidance, look at either my `mods/c_humanity.lua` or the vanilla cards in the decompiled source code.
+        - use_condition (function): the function that defines the use conditions of the card
+            - This function must return `true` when the card is available to be used. For guidance, look at either my `mods/c_humanity.lua` or the vanilla cards in the decompiled source code.
+        - order (int): a number that the game uses to order the cards in the collection tab
+            - If you're unsure what to put here, leave it as `nil`. It will add it to the end of the collection.
+        - discovered (bool): defines whether or not the card is discovered in the collection or not
+            - I haven't tested this. I think it functionally works, but visually will not use the undiscovered card sprite in the collection.
+        - cost (int): the cost of the card
+        - pos (table: {x=int, y=int}): defines the position of the card's sprite in the spritesheet
+            - If left as `nil`, it will use a blank sprite. x and y start from 0, in the top left of the sprite sheet.
+        - config (table): a table of numerical values used in the card
+            - Usually stored in `card.ability.consumeable`
+        - desc (table of strings): the displayed description text of the card
+            - I'll write a separate section of description formatting soon. For now: `{C:attention}text{}` for cards, `{C:red}text{}` for mult, and `{C:chips}text{}` for chips. You can find all the game's descriptions in the localization folder of the decompiled game
+        - alerted (bool): Defines if the joker will have an alert or not in the collection
+            - Thank you HeyImKyu for finding this. 
+        - sprite_path (string)
+        - sprite_name (string)
+        - sprite_size (table {px=int, py=int})
+            > [!WARNING]
+            > You **MUST** have 1x and 2x folders in your `sprite_path` folder. 
+            - If your sprites are located in `Roaming/Balatro/assets/1x` or `Roaming/Balatro/assets/2x`, then your `sprite_path` will simply be `"assets"`. I'll look at making this more flexible in the future.
+    - returns:
+        - newTarot (table): the table that defines that card that gets loaded into the game
+        - newTarotText (table): the table that holds all the card text data
+- centerHook.removeTarot & centerHook.removeSpectral
+    remove a **modded** tarot/spectral from the game
+    - parameters:
+        - id (string): the id you used to add the tarot to the game
+    - returns:
+        - nothing

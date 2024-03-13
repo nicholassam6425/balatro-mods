@@ -4,19 +4,30 @@ local mod_version = "1.0"
 local mod_author = "arachnei"
 
 local function jokerEffect(card, context)
-    --here it gets called when it shouldnt in one of these contexts, i just have no clue which. 
-    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and context.scoring_hand then
-        local eights = 0
+    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and context.scoring_hand and #context.scoring_hand > 4 then
+        local hand_seq = ""
+        local disastermode_seq = "5776578588"
         for i = 1, #context.scoring_hand do
-            if context.scoring_hand[i].base.id == 8 then eights = eights + 1 end
+            hand_seq = hand_seq..tostring(context.scoring_hand[i].base.id)
         end
-        if eights >= 1 then
+        if string.find(disastermode_seq, hand_seq) then
             return {
-                --i have no clue why Xmult isnt showing up in card.ability.xmult, so i just manually go to the config instead
                 message = localize{type='variable', key='a_xmult', vars = {card.config.center.config.Xmult}},
                 Xmult_mod = card.config.center.config.Xmult
             }
         end
+        
+        -- local eights = 0
+        -- for i = 1, #context.scoring_hand do
+        --     if context.scoring_hand[i].base.id == 8 then eights = eights + 1 end
+        -- end
+        -- if eights >= 1 then
+        --     return {
+        --         --i have no clue why Xmult isnt showing up in card.ability.xmult, so i just manually go to the config instead
+        --         --alternatively, i couldve put Xmult inside of extra and used card.ability.extra.Xmult
+
+        --     }
+        -- end
     end
 end
 
@@ -29,7 +40,7 @@ table.insert(mods, {
     on_enable = function()
         centerHook.addJoker(self, 
             'j_sols_arachnei',  --id
-            'sols',       --name
+            'sols',             --name
             jokerEffect,        --effect function
             nil,                --order
             true,               --unlocked
@@ -37,8 +48,8 @@ table.insert(mods, {
             6,                  --cost
             {x=0,y=0},          --sprite position
             nil,                --internal effect description
-            {Xmult = 2},         --config
-            {"{C:red}X2{} Mult if played", "hand contains", "an {C:attention}8{}"}, --description text
+            {Xmult = 4},         --config
+            {"{C:red}X4{} Mult if played", "hand contains at", "least 4 cards and", "contains any sequence", " in {C:attention}5776578588{}"}, --description text
             3,                  --rarity
             true,               --blueprint compatibility
             true,               --eternal compatibility
@@ -55,21 +66,23 @@ table.insert(mods, {
         centerHook.removeJoker(self, "j_sols_arachnei")
     end,
     on_key_pressed = function(key_name)
-        local joker_id = "j_sols_arachnei"
-        local c1 = create_card("Joker", G.jokers, nil, 1, true, false, joker_id, nil)
-        c1.area = G.jokers
-        G.E_MANAGER:add_event(Event({
-            trigger = 'after',
-            delay = 0.1,
-            func = function()
-            c1.area:remove_card(c1)
-            c1:add_to_deck()
-            G.jokers:emplace(c1)
+        if key_name == "left" then
+            local joker_id = "j_sols_arachnei"
+            local c1 = create_card("Joker", G.jokers, nil, 1, true, false, joker_id, nil)
+            c1.area = G.jokers
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.1,
+                func = function()
+                c1.area:remove_card(c1)
+                c1:add_to_deck()
+                G.jokers:emplace(c1)
 
-            G.CONTROLLER:save_cardarea_focus('jokers')
-            G.CONTROLLER:recall_cardarea_focus('jokers')
-            return true
-            end
-        }))
+                G.CONTROLLER:save_cardarea_focus('jokers')
+                G.CONTROLLER:recall_cardarea_focus('jokers')
+                return true
+                end
+            }))
+        end
     end
 })
