@@ -88,7 +88,9 @@ An example tarot card that averages the ranks of selected cards
 
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
-A joker card that gives you X2 mult if the played hand contains an 8
+A joker card that gives you X4 mult if you play at least 4 cards that contain any sequence in DISASTERMODE (5776578588)
+
+![](https://cdn.7tv.app/emote/65a0e58ef9aa9eab719671c6/4x.webp)
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/new_j_sols.gif)
 
