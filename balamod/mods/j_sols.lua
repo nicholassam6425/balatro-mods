@@ -66,23 +66,6 @@ table.insert(mods, {
         centerHook.removeJoker(self, "j_sols_arachnei")
     end,
     on_key_pressed = function(key_name)
-        if key_name == "left" then
-            local joker_id = "j_sols_arachnei"
-            local c1 = create_card("Joker", G.jokers, nil, 1, true, false, joker_id, nil)
-            c1.area = G.jokers
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.1,
-                func = function()
-                c1.area:remove_card(c1)
-                c1:add_to_deck()
-                G.jokers:emplace(c1)
 
-                G.CONTROLLER:save_cardarea_focus('jokers')
-                G.CONTROLLER:recall_cardarea_focus('jokers')
-                return true
-                end
-            }))
-        end
     end
 })
