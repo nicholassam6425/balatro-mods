@@ -104,7 +104,7 @@ A joker card that gives you X4 mult if you play at least 4 cards that contain an
 
 A planet card that levels up all hands that contain flushes
 
-![]((https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_ganymede.gif))
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_ganymede.gif)
 
 # Useful Documentation
 
