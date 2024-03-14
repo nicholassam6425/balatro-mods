@@ -9,6 +9,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Jokers](#jokers-modsj_jokerslua)
     - [Humanity](#humanity-modsc_humanitylua)
     - [sols](#sols-modsj_solslua)
+    - [Ganymede](#ganymede-modsc_ganymedelua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a Joker](#cheating-in-a-joker)
     - [Contexts](#contexts)
@@ -93,6 +94,17 @@ A joker card that gives you X4 mult if you play at least 4 cards that contain an
 ![](https://cdn.7tv.app/emote/65a0e58ef9aa9eab719671c6/4x.webp)
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/new_j_sols.gif)
+
+## Ganymede (mods/c_ganymede.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+A planet card that levels up all hands that contain flushes
+
+![]((https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_ganymede.gif))
 
 # Useful Documentation
 

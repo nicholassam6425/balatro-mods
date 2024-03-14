@@ -10,6 +10,7 @@ local patched_spectral_collection = false
 local patched_joker_effects = false
 local patched_tarot_collection = false
 local patched_sprite_logic = false
+local patched_planet_loc_vars = false
 local mod_id = "center_hook_arachnei"
 local mod_name = "Center Hook"
 local mod_version = "0.6"
@@ -25,13 +26,13 @@ function initCenterHook()
     local sets = {
         "Joker",    --done
         "Tarot",    --done
-        "Planet",
+        "Planet",   
         "Spectral", --done
         "Voucher",
         "Back",     --not planned
         "Enhanced", --unsure
         "Edition",  --unsure
-        "Booster",  
+        "Booster",  --i think this is impossible without disrupting the code significantly. i'll try this again once i finish everything else
     }
 
     local jokerData = {
@@ -88,6 +89,8 @@ function initCenterHook()
     centerHook.jokers = {}
     centerHook.tarots = {}
     centerHook.spectrals = {}
+    centerHook.planets = {}
+    
 
     --[[
         remove given joker from the game
@@ -126,6 +129,10 @@ function initCenterHook()
             no_pool_flag: strings
             yes_pool_flag: strings
             unlock_condition: table (Read Useful Documentation in the readme for help)
+            alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
 
         returns:
             newJoker: the joker card table
@@ -338,37 +345,96 @@ function initCenterHook()
         return newTarot, newTarotText
     end
 
-    --[[VERY WIP
-    function centerHook:addPlanet(id, name, order, discovered, cost, freq, cost_mult, config)
-        id = id or "c_pl_placeholder"
+    function centerHook:removePlanet(id)
+        table.remove(G.P_CENTER_POOLS["Planet"], centerHook.planets[id].pool_indices[1])
+        table.remove(G.P_CENTER_POOLS["Tarot_Planet"], centerHook.planets[id].pool_indices[2])
+        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.planets[id].pool_indices[3])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Planet[id] = nil
+        table.remove(centerHook.consumeableEffects, centerHook.planets[id].use_indices[1])
+        table.remove(centerHook.canUseConsumeable, centerHook.planets[id].use_indices[2])
+        G.ASSET_ATLAS[id] = nil
+        centerHook.planets[id] = nil
+    end
+
+    function centerHook:addPlanet(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
+        id = id or "c_pl_placeholder" .. #G.P_CENTER_POOLS["Planet"] + 1
         name = name or "Planet Placeholder"
+        use_effect = use_effect or function(_) end
+        use_condition = use_condition or function(_) end
         order = order or #G.P_CENTER_POOLS["Planet"] + 1
         discovered = discovered or true
         cost = cost or 3
-        freq = freq or 1
-        cost_mult = cost_mult or 1.0
+        pos = pos or {x=7, y=2} -- blank planet sprite
         config = config or {}
+        desc = desc or {""}
+        alerted = alerted or true
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or {px=71,py=95}
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
+
         local newPlanet = {
             order = order,
             discovered = discovered,
             cost = cost,
             consumeable = true,
-            freq = freq,
             name = name,
-            pos = { x = 7, y = 2 }, --blank planet sprite
+            pos = pos,
             set = "Planet",
-            effect = "Hand Upgrade",
-            cost_mult = cost_mult,
-            config = config
+            config = config,
+            key = id,
+            effect = "",
+            alerted = alerted,
+            modded_sprite = modded_sprite,
+            modded = true
         }
-        newPlanet.key = id
-        table.insert(G.P_CENTER_POOLS['Planet'], newPlanet)
-        table.insert(G.P_CENTER_POOLS['Consumeables'], newPlanet)
-        table.insert(G.P_CENTER_POOLS['Tarot_Planet'], newPlanet)
-        return
-    end
-    ]]
 
+        --add it to all the game tables
+        table.insert(G.P_CENTER_POOLS["Planet"], newPlanet)
+        table.insert(G.P_CENTER_POOLS["Tarot_Planet"], newPlanet)
+        table.insert(G.P_CENTER_POOLS["Consumeables"], newPlanet)
+        G.P_CENTERS[id] = newPlanet
+
+        --add name + description to the localization object
+        local newPlanetText = {name=name, text=desc, text_parsed={}, name_parsed={}}
+        for _, line in ipairs(desc) do
+            newPlanetText.text_parsed[#newPlanetText.text_parsed+1] = loc_parse_string(line)
+        end
+        for _, line in ipairs(type(newPlanetText.name) == 'table' and newPlanetText.name or {newPlanet.name}) do
+            newPlanetText.name_parsed[#newPlanetText.name_parsed+1] = loc_parse_string(line)
+        end
+        G.localization.descriptions.Planet[id] = newPlanetText
+
+        --add joker sprite to sprite atlas
+        if sprite_name and sprite_path and sprite_size.px and sprite_size.py then
+            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            G.ASSET_ATLAS[id] = {}
+            G.ASSET_ATLAS[id].name = id
+            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
+            G.ASSET_ATLAS[id].px = sprite_size.px
+            G.ASSET_ATLAS[id].py = sprite_size.py
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
+
+        --add use effect + use conditions
+        table.insert(centerHook.consumeableEffects, use_effect)
+        table.insert(centerHook.canUseConsumeable, use_condition)
+
+        --save indices to centerhook for removal
+        centerHook.planets[id] = {
+            pool_indices = {#G.P_CENTER_POOLS["Planet"], #G.P_CENTER_POOLS["Tarot_Planet"], #G.P_CENTER_POOLS["Consumeables"]},
+            use_indices = {#centerHook.consumeableEffects, #centerHook.canUseConsumeable}
+        }
+
+        return newPlanet, newPlanetText
+    end
     --[[
         remove given spectral card from the game
 
@@ -406,10 +472,11 @@ function initCenterHook()
             newSpectral: the spectral card table
             newSpectralText: the spectral card text table
     ]]
-    function centerHook:addSpectral(id, name, effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
+    function centerHook:addSpectral(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
         --defaults
         id = id or "c_spec_placeholder" .. #G.P_CENTER_POOLS["Spectral"] + 1
         name = name or "Spectral Placeholder"
+        use_effect = use_effect or function(_) end
         use_condition = use_condition or function(_) end
         order = order or #G.P_CENTER_POOLS["Spectral"] + 1
         discovered = discovered or true
@@ -472,7 +539,7 @@ function initCenterHook()
         end
 
         --add use effect + use conditions
-        table.insert(centerHook.consumeableEffects, effect)
+        table.insert(centerHook.consumeableEffects, use_effect)
         table.insert(centerHook.canUseConsumeable, use_condition)
 
         --save indices to centerhook for removal
@@ -498,7 +565,7 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == "right" then
-                
+                sendDebugMessage(extractFunctionBody("functions/common_events.lua", "generate_card_ui"))
             end
         end,
         on_post_update = function()
@@ -581,6 +648,7 @@ table.insert(mods,
                 patched_joker_effects = true
             end
 
+            --add modded sprites to the sprite loading logic
             if not patched_sprite_logic then
                 local fun_name = "Card:set_sprites"
                 local file_name = "card.lua"
@@ -592,6 +660,16 @@ table.insert(mods,
             ]]
                 inject(file_name, fun_name, to_replace, replacement)
                 patched_sprite_logic = true
+            end
+
+            --remove modded planets from using default planet logic 
+            if not patched_planet_loc_vars then
+                local fun_name = "Card:use_consumeable"
+                local file_name = "card.lua"
+                local to_replace = "if self.ability.consumeable.hand_type then"
+                local replacement = [[if self.ability.consumeable.hand_type and not self.config.center.modded then]]
+                inject(file_name, fun_name, to_replace, replacement)
+                patched_planet_loc_vars = true
             end
         end
     }
