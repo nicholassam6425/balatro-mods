@@ -4,16 +4,18 @@ local mod_version = "1.0"
 local mod_author = "arachnei"
 
 local function jokerEffect(card, context)
-    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and context.scoring_hand and #context.scoring_hand > 4 then
+    if card.ability.name == "sols" and context.cardarea == G.jokers and not context.before and not context.after and context.full_hand and #context.full_hand >= 4 then
         local hand_seq = ""
         local disastermode_seq = "5776578588"
-        for i = 1, #context.scoring_hand do
-            hand_seq = hand_seq..tostring(context.scoring_hand[i].base.id)
+        for i = 1, #context.full_hand do
+            hand_seq = hand_seq..tostring(context.full_hand[i].base.id)
         end
         if string.find(disastermode_seq, hand_seq) then
             return {
-                message = localize{type='variable', key='a_xmult', vars = {card.config.center.config.Xmult}},
-                Xmult_mod = card.config.center.config.Xmult
+                --i have no clue why Xmult isnt showing up in card.ability.xmult, so i just manually go to the config instead
+                --alternatively, i couldve put Xmult inside of extra and used card.ability.extra.Xmult
+                message = localize{type='variable', key='a_xmult', vars = {card.ability.extra.Xmult}},
+                Xmult_mod = card.ability.extra.Xmult
             }
         end
         
@@ -23,9 +25,8 @@ local function jokerEffect(card, context)
         -- end
         -- if eights >= 1 then
         --     return {
-        --         --i have no clue why Xmult isnt showing up in card.ability.xmult, so i just manually go to the config instead
-        --         --alternatively, i couldve put Xmult inside of extra and used card.ability.extra.Xmult
-
+        --         message = localize{type='variable', key='a_xmult', vars = {card.config.center.config.Xmult}},
+        --         Xmult_mod = card.config.center.config.Xmult
         --     }
         -- end
     end
@@ -48,7 +49,7 @@ table.insert(mods, {
             6,                  --cost
             {x=0,y=0},          --sprite position
             nil,                --internal effect description
-            {Xmult = 4},         --config
+            {extra={Xmult = 4}},         --config
             {"{C:red}X4{} Mult if played", "hand contains at", "least 4 cards and", "contains any sequence", " in {C:attention}5776578588{}"}, --description text
             3,                  --rarity
             true,               --blueprint compatibility
@@ -65,7 +66,4 @@ table.insert(mods, {
     on_disable = function()
         centerHook.removeJoker(self, "j_sols_arachnei")
     end,
-    on_key_pressed = function(key_name)
-
-    end
 })

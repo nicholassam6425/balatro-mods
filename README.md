@@ -243,7 +243,7 @@ Commonly used to store numerical values of your joker, such as bonus mult. (Usin
 
 i.e Misprint's config is `{extra = {max = 23, min = 0}}`. The following are variables in config that are NOT in extra. 
 
-Personally, I would suggest using `config.extra` almost every time. It's more intuitive to use.
+Personally, I would suggest using `config.extra` almost every time. It's more intuitive to use, and sometimes using the keys listed below sometimes just... dont get loaded into `card.ability` correctly. Worse case, you can use `card.config.center.config` to directly access the table that gets loaded into `card.ability`, but messing with these may end up changing values on copies of the card. 
 
 - `mult`: int: multiplier additive bonus
 - `extra`: table: put anything else you want in here
