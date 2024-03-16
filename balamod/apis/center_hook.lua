@@ -10,10 +10,11 @@ local patched_spectral_collection = false
 local patched_joker_effects = false
 local patched_tarot_collection = false
 local patched_sprite_logic = false
-local patched_planet_loc_vars = false
+local patched_modded_planet_logic = false
+local patched_planet_collection = false
 local mod_id = "center_hook_arachnei"
 local mod_name = "Center Hook"
-local mod_version = "0.6"
+local mod_version = "0.7"
 local mod_author = "arachnei"
 
 --get rid of debug messages if user doesnt have devtools
@@ -26,7 +27,7 @@ function initCenterHook()
     local sets = {
         "Joker",    --done
         "Tarot",    --done
-        "Planet",   
+        "Planet",   --done
         "Spectral", --done
         "Voucher",
         "Back",     --not planned
@@ -556,6 +557,29 @@ end
 
 centerHook = initCenterHook()
 
+
+local function g_funcs_your_collection_planet_page(args)
+    if not args or not args.cycle_config then return end
+    for j = 1, #G.your_collection do
+        for i = #G.your_collection[j].cards,1, -1 do
+            local c = G.your_collection[j]:remove_card(G.your_collection[j].cards[i])
+            c:remove()
+            c = nil
+        end
+    end
+    
+    for j = 1, #G.your_collection do
+        for i = 1, 6 do
+            local center = G.P_CENTER_POOLS["Planet"][i+(j-1)*(6) + (12*(args.cycle_config.current_option - 1))]
+            if not center then break end
+            local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, center)
+            card:start_materialize(nil, i>1 or j>1)
+            G.your_collection[j]:emplace(card)
+        end
+    end
+    INIT_COLLECTION_CARD_ALERTS()
+end
+
 table.insert(mods,
     {
         mod_id = mod_id,
@@ -565,12 +589,13 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == "right" then
-                sendDebugMessage(extractFunctionBody("functions/common_events.lua", "generate_card_ui"))
+                sendDebugMessage("a")
+                sendDebugMessage(extractFunctionBody("functions/UI_definitions.lua", "create_UIBox_your_collection_planets"))
             end
         end,
         on_post_update = function()
 
-            --fix the spectral collection tab being all around terrible
+            --fix the spectral collection tab using wrong functions & keys
             if not patched_spectral_collection then
                 local to_replace = "math.floor"
                 local replacement = "math.ceil"
@@ -663,13 +688,33 @@ table.insert(mods,
             end
 
             --remove modded planets from using default planet logic 
-            if not patched_planet_loc_vars then
+            if not patched_modded_planet_logic then
                 local fun_name = "Card:use_consumeable"
                 local file_name = "card.lua"
                 local to_replace = "if self.ability.consumeable.hand_type then"
                 local replacement = [[if self.ability.consumeable.hand_type and not self.config.center.modded then]]
                 inject(file_name, fun_name, to_replace, replacement)
-                patched_planet_loc_vars = true
+                patched_modded_planet_logic = true
+            end
+
+            if not patched_planet_collection then
+                G.FUNCS.your_collection_planet_page = g_funcs_your_collection_planet_page
+
+                local fun_name = "create_UIBox_your_collection_planets"
+                local file_name = "functions/UI_definitions.lua"
+                local to_replace = "INIT_COLLECTION_CARD_ALERTS()"
+                local replacement = [[local planet_options = {}
+  for i = 1, math.ceil(#G.P_CENTER_POOLS.Planet/12) do
+    table.insert(planet_options, localize('k_page').." "..tostring(i).."/"..tostring(math.ceil(#G.P_CENTER_POOLS.Planet/12)));
+  end
+
+  INIT_COLLECTION_CARD_ALERTS]]
+                inject(file_name, fun_name, to_replace, replacement)
+
+                local to_replace = "{n=G.UIT.R, config={align = \"cm\", padding = 0.7}, nodes={}},"
+                local replacement = "{n=G.UIT.R, config={align = \"cm\", padding = 0}, nodes={create_option_cycle({options = planet_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_planet_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})}},"
+                inject(file_name, fun_name, to_replace, replacement)
+                patched_planet_collection = true
             end
         end
     }
