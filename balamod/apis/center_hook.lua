@@ -36,50 +36,16 @@ function initCenterHook()
         "Booster",  --i think this is impossible without disrupting the code significantly. i'll try this again once i finish everything else
     }
 
-    local jokerData = {
-        "order",            --int: the order it appears in collection
-        "unlocked",         --bool: unlocked or not
-        "discovered",       --bool: discovered or not
-        "blueprint_compat", --bool: blueprint can copy or not
-        "eternal_compat",   --bool: can be eternal or not
-        "rarity",           --int(1-4): rarity
-        "cost",             --int: shop cost
-        "name",             --str: name
-        "pos",              --{x:int, y:int}: defines position of its card image in the sprite sheet
-        "set",              --str("Joker"): type of center
-        "effect",           --str: (Optional) 1-5 word description of effect
-        "cost_mult",        --float(1.0): idk
-        "config",           --check readme "Useful Documentation" section
-        "enhancement_gate", --str: (Optional) defines card enhancements that are required in the deck before the joker is offered (im unsure if you can put multiple)
-        "no_pool_flag",     --str: (Optional) defines flags that will remove this joker from the pool (ex: gros_michel_extinct)
-        "yes_pool_flag",    --str: (Optional) defines flags that will add this joker to the pool (ex: gros_michel_extinct)
-        "unlock_condition"  --check readme "Useful Documentation" section
-    }
-
-    local voucherData = {
-        "order",
-        "discovered",
-        "unlocked",
-        "available",
-        "cost",
-        "name",
-        "pos",
-        "set",
-        "config"
-    }
-
-    local backData = {
-        "name",
-        "stake",
-        "unlocked",
-        "order",
-        "pos",
-        "set",
-        "config",
-        "discovered",
-        "unlock_condition",
-        "omit"
-    }
+    ----------------------
+    -- helper functions --
+    ----------------------
+    local function addSprite(id, sprite_path, sprite_size)
+        G.ASSET_ATLAS[id] = {}
+        G.ASSET_ATLAS[id].name = id
+        G.ASSET_ATLAS[id].image = love.graphics.newImage(sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
+        G.ASSET_ATLAS[id].px = sprite_size.px
+        G.ASSET_ATLAS[id].py = sprite_size.py
+    end
 
     --tables of various functions
     centerHook.consumeableEffects = {}
@@ -102,7 +68,9 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removeJoker(id)
-        table.remove(G.P_CENTER_POOLS["Joker"], centerHook.jokers[id].pool_indices[1])
+        local rarity = G.P_CENTERS[id].rarity
+        table.remove(G.P_CENTER_POOLS['Joker'], centerHook.jokers[id].pool_indices[1])
+        table.remove(G.P_JOKER_RARITY_POOLS[rarity], centerHook.jokers[id].pool_indices[2])
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Joker[id] = nil
         table.remove(centerHook.jokerEffects, centerHook.jokers[id].use_indices[1])
@@ -197,6 +165,7 @@ function initCenterHook()
         --add it to all the game tables
         table.insert(G.P_CENTER_POOLS["Joker"], newJoker)
         G.P_CENTERS[id] = newJoker
+        table.insert(G.P_JOKER_RARITY_POOLS[rarity], newJoker)
     
         --add name + description to the localization object
         local newJokerText = {name=name, text=desc, text_parsed={}, name_parsed={}}
@@ -210,12 +179,8 @@ function initCenterHook()
 
         --add joker sprite to sprite atlas
         if sprite_name and sprite_path then
-            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
-            G.ASSET_ATLAS[id] = {}
-            G.ASSET_ATLAS[id].name = id
-            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
-            G.ASSET_ATLAS[id].px = sprite_size.px
-            G.ASSET_ATLAS[id].py = sprite_size.py
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
         else
             sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
         end
@@ -223,7 +188,7 @@ function initCenterHook()
         table.insert(centerHook.jokerEffects, use_effect)
         table.insert(centerHook.jokers, {name=name, id=id})
         centerHook.jokers[id] = {
-            pool_indices={#G.P_CENTER_POOLS["Joker"]}, 
+            pool_indices={#G.P_CENTER_POOLS["Joker"], #G.P_JOKER_RARITY_POOLS[rarity]}, 
             use_indices={#centerHook.jokerEffects},
         }
         return newJoker, newJokerText
@@ -327,12 +292,8 @@ function initCenterHook()
 
         --add tarot sprite to sprite atlas
         if sprite_name and sprite_path then
-            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
-            G.ASSET_ATLAS[id] = {}
-            G.ASSET_ATLAS[id].name = id
-            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
-            G.ASSET_ATLAS[id].px = sprite_size.px
-            G.ASSET_ATLAS[id].py = sprite_size.py
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
         else
             sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
         end
@@ -413,13 +374,9 @@ function initCenterHook()
         G.localization.descriptions.Planet[id] = newPlanetText
 
         --add joker sprite to sprite atlas
-        if sprite_name and sprite_path and sprite_size.px and sprite_size.py then
-            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
-            G.ASSET_ATLAS[id] = {}
-            G.ASSET_ATLAS[id].name = id
-            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
-            G.ASSET_ATLAS[id].px = sprite_size.px
-            G.ASSET_ATLAS[id].py = sprite_size.py
+        if sprite_name and sprite_path then
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
         else
             sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
         end
@@ -529,12 +486,8 @@ function initCenterHook()
 
         --add joker sprite to sprite atlas
         if sprite_name and sprite_path and sprite_size.px and sprite_size.py then
-            actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
-            G.ASSET_ATLAS[id] = {}
-            G.ASSET_ATLAS[id].name = id
-            G.ASSET_ATLAS[id].image = love.graphics.newImage(actual_sprite_path, {mipmaps = true, dpiscale = G.SETTINGS.GRAPHICS.texture_scaling})
-            G.ASSET_ATLAS[id].px = sprite_size.px
-            G.ASSET_ATLAS[id].py = sprite_size.py
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
         else
             sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
         end
@@ -557,7 +510,7 @@ end
 
 centerHook = initCenterHook()
 
-
+-- define planet collection pages function
 local function g_funcs_your_collection_planet_page(args)
     if not args or not args.cycle_config then return end
     for j = 1, #G.your_collection do
@@ -588,9 +541,8 @@ table.insert(mods,
         author = mod_author,
         enabled = true,
         on_key_pressed = function(key_name)
-            if key_name == "right" then
-                sendDebugMessage("a")
-                sendDebugMessage(extractFunctionBody("functions/UI_definitions.lua", "create_UIBox_your_collection_planets"))
+            if key_name == "right" then 
+            
             end
         end,
         on_post_update = function()
