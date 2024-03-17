@@ -1,13 +1,10 @@
-local mod_id = "c_humanity"
+local mod_id = "c_humanity_arachnei"
 local mod_name = "Humanity"
 local mod_version = "1.0"
 local mod_author = "arachnei"
 
 local function consumeableEffect(card) 
     if card.ability.name == "Humanity" then
-        for key, value in pairs(card.ability.consumeable) do
-            sendDebugMessage(tostring(key).." : "..tostring(value))
-        end
         --make the tarot card do a little animation
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
@@ -31,12 +28,12 @@ local function consumeableEffect(card)
 
             --set new ranks
             local rank_name = nil
-            if rank_avg < 10 then rank_name = tostring(rank_avg)
+            if rank_avg == 1 then rank_name = 'A'
+            elseif rank_avg < 10 then rank_name = tostring(rank_avg)
             elseif rank_avg == 10 then rank_name = 'T'
             elseif rank_avg == 11 then rank_name = 'J'
             elseif rank_avg == 12 then rank_name = 'Q'
             elseif rank_avg == 13 then rank_name = 'K'
-            elseif rank_avg == 14 then rank_name = 'A'
             else return false end
             for i=1, #G.hand.highlighted do
                 G.hand.highlighted[i]:set_base(G.P_CARDS[string.sub(G.hand.highlighted[i].base.suit, 1, 1)..'_'..rank_name])
@@ -86,5 +83,5 @@ table.insert(mods, {
     end,
     on_disable = function()
         centerHook.removeTarot(self, "c_humanity_arachnei")
-    end
+    end,
 })
