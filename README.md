@@ -11,7 +11,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [sols](#sols-modsj_solslua)
     - [Ganymede](#ganymede-modsc_ganymedelua)
 - [Useful Documentation](#useful-documentation)
-    - ['Cheating' in a Joker](#cheating-in-a-joker)
+    - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
     - [Unlock Conditions](#unlock-conditions)
     - [Joker.config](#jokerconfig)
@@ -31,10 +31,7 @@ See mods/c_bezos.lua or mods/c_humanity.lua for an example of how to implement a
 
 See mods/j_jokers.lua or mods/j_sols.lua for an example of how to implement a joker card.
 
-For a rundown of methods & parameters, check out 
-```lua
-
-```
+For a rundown of methods & parameters, check out [Center Hook Documentation](#center-hook-documentation)
 
 ## Quick Restart (mods/quickrestart.lua)
 | Balamod | Steamodded |
@@ -105,6 +102,17 @@ A joker card that gives you X4 mult if you play at least 4 cards that contain an
 A planet card that levels up all hands that contain flushes
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_ganymede.gif)
+
+## The Jonkler (mods/j_jonkler.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+A simple joker card that gives X1.8 mult. 
+
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the_jonkler.png)
 
 # Useful Documentation
 
