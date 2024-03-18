@@ -64,5 +64,6 @@ table.insert(mods, {
         )
     end,
     on_disable = function()
-        centerHook.removePlanet("c_ganymede_arachnei")
+        centerHook.removePlanet(self, "c_ganymede_arachnei")
+    end
 })

@@ -542,7 +542,6 @@ table.insert(mods,
         enabled = true,
         on_key_pressed = function(key_name)
             if key_name == "right" then 
-            
             end
         end,
         on_post_update = function()

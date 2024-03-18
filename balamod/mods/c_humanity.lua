@@ -51,10 +51,18 @@ end
 
 local function consumeableCondition(card)
     if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK then
-        if card.ability.name == "Humanity" and #G.hand.highlighted <= card.ability.consumeable.max_highlighted and #G.hand.highlighted >= 1 then 
+        if card.ability.name == "Humanity" and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.consumeable.max_highlighted then 
+            --this is supposed to make it so you cant use the card if you highlight a stone card, but
+            --i literally do not know why it doesnt work. it literally returns false correctly, but
+            --you can still use the card even if you return false
+            for i=1, #G.hand.highlighted do
+                if G.hand.highlighted[i].ability.effect == "Stone Card" then 
+                    return false
+                end
+            end
             return true
         end
-    else return false end
+    end
 end
 
 table.insert(mods, {
