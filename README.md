@@ -10,6 +10,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Humanity](#humanity-modsc_humanitylua)
     - [sols](#sols-modsj_solslua)
     - [Ganymede](#ganymede-modsc_ganymedelua)
+    - [Jonkler](#the-jonkler-modsj_jonklerlua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
