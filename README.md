@@ -113,7 +113,7 @@ A planet card that levels up all hands that contain flushes
 
 A simple joker card that gives X1.8 mult. 
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the_jonkler.png)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the%20jonkler.PNG)
 
 # Useful Documentation
 
