@@ -115,6 +115,19 @@ A simple joker card that gives X1.8 mult.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the%20jonkler.PNG)
 
+## Card Store (mods/v_card_shop.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+> [!WARNING]
+> **INCOMPATIBLE** with any mod that affects shop reroll logic
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+A voucher card that allows you to refresh purchased booster packs
+
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/v_card_shop.gif)
+
 # Useful Documentation
 
 ## 'Cheating' in a card

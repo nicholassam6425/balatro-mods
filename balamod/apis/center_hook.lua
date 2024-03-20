@@ -12,9 +12,10 @@ local patched_tarot_collection = false
 local patched_sprite_logic = false
 local patched_modded_planet_logic = false
 local patched_planet_collection = false
+local patched_voucher_effects = false
 local mod_id = "center_hook_arachnei"
 local mod_name = "Center Hook"
-local mod_version = "0.7"
+local mod_version = "0.8"
 local mod_author = "arachnei"
 
 --get rid of debug messages if user doesnt have devtools
@@ -51,13 +52,14 @@ function initCenterHook()
     centerHook.consumeableEffects = {}
     centerHook.canUseConsumeable = {}
     centerHook.jokerEffects = {}
+    centerHook.voucherEffects = {}
 
     --keep track of added centers for removing
     centerHook.jokers = {}
     centerHook.tarots = {}
     centerHook.spectrals = {}
     centerHook.planets = {}
-    
+    centerHook.vouchers = {}
 
     --[[
         remove given joker from the game
@@ -415,6 +417,7 @@ function initCenterHook()
     --[[
         add given spectral card, and given parameters, to the game
 
+        
         params:
             id: string
             name: string
@@ -435,7 +438,7 @@ function initCenterHook()
         id = id or "c_spec_placeholder" .. #G.P_CENTER_POOLS["Spectral"] + 1
         name = name or "Spectral Placeholder"
         use_effect = use_effect or function(_) end
-        use_condition = use_condition or function(_) end
+        use_condition = use_condition or function(_) return false end
         order = order or #G.P_CENTER_POOLS["Spectral"] + 1
         discovered = discovered or true
         cost = cost or 4
@@ -484,8 +487,8 @@ function initCenterHook()
         end
         G.localization.descriptions.Spectral[id] = newSpectralText
 
-        --add joker sprite to sprite atlas
-        if sprite_name and sprite_path and sprite_size.px and sprite_size.py then
+        --add sprite to sprite atlas
+        if sprite_name and sprite_path then
             local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
             addSprite(id, actual_sprite_path, sprite_size)
         else
@@ -505,6 +508,77 @@ function initCenterHook()
         return newSpectral, newSpectralText
     end
 
+    function centerHook:addVoucher(id, name, voucher_effect, order, discovered, unlocked, available, cost, pos, config, requires, desc, alerted, sprite_path, sprite_name, sprite_size)
+        id = id or "v_placeholder" .. #G.P_CENTER_POOLS["Voucher"] + 1
+        name = name or "Voucher Placeholder"
+        voucher_effect = voucher_effect or function(_) end
+        order = order or #G.P_CENTER_POOLS["Voucher"] + 1
+        discovered = discovered or true
+        unlocked = unlocked or true
+        available = available or true
+        cost = cost or 10
+        pos = pos or {x=8,y=2}
+        config = config or {}
+        desc = desc or {"Placeholder"}
+        alerted = alerted or true
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or {px=71, py=95}
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
+
+        local newVoucher = {
+            order = order,
+            discovered = discovered,
+            unlocked = unlocked,
+            available = available,
+            cost = cost,
+            name = name,
+            pos = pos,
+            set = "Voucher",
+            config = config,
+            requires = requires,
+            key = id,
+            effect = "",
+            alerted = alerted,
+            modded_sprite = modded_sprite
+        }
+
+        --add to game tables
+        table.insert(G.P_CENTER_POOLS["Voucher"], newVoucher)
+        G.P_CENTERS[id] = newVoucher
+        
+        --add name + description to the localization object
+        local newVoucherText = {name=name, text=desc, text_parsed={}, name_parsed={}}
+        for _, line in ipairs(desc) do
+            newVoucherText.text_parsed[#newVoucherText.text_parsed+1] = loc_parse_string(line)
+        end
+        for _, line in ipairs(type(newVoucherText.name) == 'table' and newVoucherText.name or {newVoucher.name}) do
+            newVoucherText.name_parsed[#newVoucherText.name_parsed+1] = loc_parse_string(line)
+        end
+        G.localization.descriptions.Voucher[id] = newVoucherText
+
+        --add sprite to sprite atlas
+        if sprite_name and sprite_path then
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
+
+        --add effect to effect table
+        table.insert(centerHook.voucherEffects, voucher_effect)
+
+        --save indices for removal
+        centerHook.vouchers[id] = {
+            pool_indices = {#G.P_CENTER_POOLS["Voucher"]},
+            use_indices = {#centerHook.voucherEffects}
+        }
+    end
     return centerHook
 end
 
@@ -666,6 +740,16 @@ table.insert(mods,
                 local replacement = "{n=G.UIT.R, config={align = \"cm\", padding = 0}, nodes={create_option_cycle({options = planet_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_planet_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})}},"
                 inject(file_name, fun_name, to_replace, replacement)
                 patched_planet_collection = true
+            end
+
+            if not patched_voucher_effects then
+                local fun_name = "Card:apply_to_run"
+                local file_name = "card.lua"
+                local replacement = [[    for _, effect in pairs(centerHook.voucherEffects) do
+        effect(center_table)
+    end]]
+                injectTail(file_name, fun_name, replacement)
+                patched_voucher_effects = true
             end
         end
     }
