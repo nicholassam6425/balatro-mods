@@ -45,16 +45,15 @@ local function card_shop_reroll_func(e)
 ----------------------------------------
         -- modded code start --
         if G.GAME.used_vouchers.v_card_shop_arachnei then
-            for i=1, 2 do
+            for i=1, 2 do --check both booster pack slots
                 G.GAME.current_round.used_packs = G.GAME.current_round.used_packs or {}
                 if G.GAME.current_round.used_packs[i] == "USED" then
-                    G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key
+                    G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key --if a slot is used, mark the slot with a new pack key
                 elseif string.sub(G.GAME.current_round.used_packs[i], 1, 1) == "p" then
-                    G.GAME.current_round.used_packs[i] = "EXISTS"
+                    G.GAME.current_round.used_packs[i] = "EXISTS"   --if a slot is populated, mark it as populated
+                elseif not G.GAME.current_round.used_packs[i] then
+                    G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key --failsafe
                 end
-                -- if not G.GAME.current_round.used_packs[i] or G.GAME.current_round.used_packs[i] == "USED" then
-                --     G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key
-                -- end
                 
                 if G.GAME.current_round.used_packs[i] ~= 'USED' and G.GAME.current_round.used_packs[i] ~= 'EXISTS' then 
                     local card = Card(G.shop_booster.T.x + G.shop_booster.T.w/2,
