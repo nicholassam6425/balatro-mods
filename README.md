@@ -25,13 +25,13 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
 | ------- | ---------- |
 | ✔️ | ❌ |
 
-An api/hook to add center cards (card back, joker, voucher, booster pack, editions, card type, consumable cards) to the game.
-
-**DOES NOT** add the functionality of the card, just adds the card and necessary data to all the places it needs to be. 
+An api/hook to add center cards (joker, voucher, booster pack, consumable cards) to the game.
 
 See mods/c_bezos.lua or mods/c_humanity.lua for an example of how to implement a consumeable card.
 
 See mods/j_jokers.lua or mods/j_sols.lua for an example of how to implement a joker card.
+
+See mods/v_card_shop.lua for an example of how to implement a voucher card.
 
 For a rundown of methods & parameters, check out [Center Hook Documentation](#center-hook-documentation)
 

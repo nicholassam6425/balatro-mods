@@ -42,7 +42,7 @@ local function card_shop_reroll_func(e)
             G.shop_jokers:emplace(new_shop_card)
             new_shop_card:juice_up()
         end 
-        -----------------------
+----------------------------------------
         -- modded code start --
         if G.GAME.used_vouchers.v_card_shop_arachnei then
             for i=1, 2 do
@@ -67,7 +67,7 @@ local function card_shop_reroll_func(e)
             end
         end
         -- modded code end --
-        ---------------------
+--------------------------------------
     return true end}))
     G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, func = function()
         G.E_MANAGER:add_event(Event({func = function()
