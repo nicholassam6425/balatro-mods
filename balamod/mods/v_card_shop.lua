@@ -114,5 +114,6 @@ table.insert(mods, {
     end,
     on_disable = function()
         G.FUNCS.reroll_shop = old_shop_reroll_func
+        centerHook.removeVoucher(self, "v_card_shop_arachnei")
     end,
 })

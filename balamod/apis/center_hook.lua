@@ -508,6 +508,15 @@ function initCenterHook()
         return newSpectral, newSpectralText
     end
 
+    function centerHook:removeVoucher(id)
+        table.remove(G.P_CENTER_POOLS["Voucher"], centerHook.vouchers[id].pool_indices[1])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Voucher[id] = nil
+        table.remove(centerHook.voucherEffects, centerHook.vouchers[id].use_indices[1])
+        G.ASSET_ATLAS[id] = nil
+        centerHook.vouchers[id] = nil
+    end
+
     function centerHook:addVoucher(id, name, voucher_effect, order, discovered, unlocked, available, cost, pos, config, requires, desc, alerted, sprite_path, sprite_name, sprite_size)
         id = id or "v_placeholder" .. #G.P_CENTER_POOLS["Voucher"] + 1
         name = name or "Voucher Placeholder"

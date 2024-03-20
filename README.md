@@ -11,6 +11,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [sols](#sols-modsj_solslua)
     - [Ganymede](#ganymede-modsc_ganymedelua)
     - [Jonkler](#the-jonkler-modsj_jonklerlua)
+    - [Card Shop](#card-store-modsv_card_shoplua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
@@ -52,6 +53,7 @@ You may remove the ante 1 restriction for your own installation if you wish.
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 An example spectral card that gives you $100 on use.
@@ -63,6 +65,7 @@ An example spectral card that gives you $100 on use.
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 An example joker card that gives all played cards +2 mult
@@ -74,6 +77,7 @@ An example joker card that gives all played cards +2 mult
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 An example tarot card that averages the ranks of selected cards
@@ -85,6 +89,7 @@ An example tarot card that averages the ranks of selected cards
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 A joker card that gives you X4 mult if you play at least 4 cards that contain any sequence in DISASTERMODE (5776578588). The cards must be in the correct order (i.e 5776 will work, but 5677 will not)
@@ -98,6 +103,7 @@ A joker card that gives you X4 mult if you play at least 4 cards that contain an
 | ------- | ---------- |
 | ✔️ | ❌ |
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 A planet card that levels up all hands that contain flushes
@@ -115,13 +121,14 @@ A simple joker card that gives X1.8 mult.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the%20jonkler.PNG)
 
-## Card Store (mods/v_card_shop.lua)
+## Card Shop (mods/v_card_shop.lua)
 | Balamod | Steamodded |
 | ------- | ---------- |
 | ✔️ | ❌ |
 
 > [!WARNING]
 > **INCOMPATIBLE** with any mod that affects shop reroll logic
+
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 A voucher card that allows you to refresh purchased booster packs
