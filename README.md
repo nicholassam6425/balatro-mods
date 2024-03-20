@@ -129,6 +129,7 @@ A simple joker card that gives X1.8 mult.
 > [!WARNING]
 > **INCOMPATIBLE** with any mod that affects shop reroll logic
 
+> [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
 A voucher card that allows you to refresh purchased booster packs
