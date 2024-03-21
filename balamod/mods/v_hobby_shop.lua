@@ -1,10 +1,10 @@
-local mod_id = "v_card_shop_arachnei"
-local mod_name = "Card Shop"
+local mod_id = "v_hobby_shop_arachnei"
+local mod_name = "Hobby Shop"
 local mod_version = "1.0"
 local mod_author = "arachnei"
 
 local function voucherEffect(center_table)
-    if center_table.name == 'Card Shop' then 
+    if center_table.name == 'Hobby Shop' then 
     end
 end
 
@@ -44,7 +44,7 @@ local function card_shop_reroll_func(e)
         end 
 ----------------------------------------
         -- modded code start --
-        if G.GAME.used_vouchers.v_card_shop_arachnei then
+        if G.GAME.used_vouchers.v_hobby_shop_arachnei then
             for i=1, 2 do --check both booster pack slots
                 G.GAME.current_round.used_packs = G.GAME.current_round.used_packs or {}
                 if G.GAME.current_round.used_packs[i] == "USED" then
@@ -91,8 +91,8 @@ table.insert(mods, {
     enabled = true,
     on_enable = function()
         centerHook.addVoucher(self,
-            "v_card_shop_arachnei",
-            "Card Shop",
+            "v_hobby_shop_arachnei",
+            "Hobby Shop",
             voucherEffect,
             nil,
             true,
@@ -113,6 +113,6 @@ table.insert(mods, {
     end,
     on_disable = function()
         G.FUNCS.reroll_shop = old_shop_reroll_func
-        centerHook.removeVoucher(self, "v_card_shop_arachnei")
+        centerHook.removeVoucher(self, "v_hobby_shop_arachnei")
     end,
 })

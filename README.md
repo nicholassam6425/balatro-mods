@@ -11,7 +11,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [sols](#sols-modsj_solslua)
     - [Ganymede](#ganymede-modsc_ganymedelua)
     - [Jonkler](#the-jonkler-modsj_jonklerlua)
-    - [Card Shop](#card-store-modsv_card_shoplua)
+    - [Hobby Shop](#hobby-shop-modsv_hobby_shoplua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
@@ -121,7 +121,7 @@ A simple joker card that gives X1.8 mult.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/the%20jonkler.PNG)
 
-## Card Shop (mods/v_card_shop.lua)
+## Hobby Shop (mods/v_hobby_shop.lua)
 | Balamod | Steamodded |
 | ------- | ---------- |
 | ✔️ | ❌ |
