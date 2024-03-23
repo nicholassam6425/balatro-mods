@@ -13,10 +13,14 @@ local patched_sprite_logic = false
 local patched_modded_planet_logic = false
 local patched_planet_collection = false
 local patched_voucher_effects = false
+local patched_open_booster = false
+local patched_booster_desc_ui = false
 local mod_id = "center_hook_arachnei"
 local mod_name = "Center Hook"
-local mod_version = "0.8"
+local mod_version = "0.9"
 local mod_author = "arachnei"
+
+
 
 --get rid of debug messages if user doesnt have devtools
 if (sendDebugMessage == nil) then
@@ -30,11 +34,11 @@ function initCenterHook()
         "Tarot",    --done
         "Planet",   --done
         "Spectral", --done
-        "Voucher",
+        "Voucher",  --done
         "Back",     --not planned
         "Enhanced", --unsure
         "Edition",  --unsure
-        "Booster",  --i think this is impossible without disrupting the code significantly. i'll try this again once i finish everything else
+        "Booster",  --wip
     }
 
     ----------------------
@@ -53,6 +57,7 @@ function initCenterHook()
     centerHook.canUseConsumeable = {}
     centerHook.jokerEffects = {}
     centerHook.voucherEffects = {}
+    centerHook.boosterEffects = {}
 
     --keep track of added centers for removing
     centerHook.jokers = {}
@@ -60,6 +65,7 @@ function initCenterHook()
     centerHook.spectrals = {}
     centerHook.planets = {}
     centerHook.vouchers = {}
+    centerHook.boosters = {}
 
     --[[
         remove given joker from the game
@@ -587,6 +593,88 @@ function initCenterHook()
             pool_indices = {#G.P_CENTER_POOLS["Voucher"]},
             use_indices = {#centerHook.voucherEffects}
         }
+
+        return newVoucher, newVoucherText
+    end
+
+    function centerHook:addBooster(id, name, pack_contents, order, discovered, weight, kind, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size, selection_state)
+        id = id or "p_placeholder" .. #G.P_CENTER_POOLS["Booster"] + 1
+        name = name or "Placeholder Pack"
+        pack_contents = pack_contents or function(_) end
+        order = order or #G.P_CENTER_POOLS["Booster"] + 1
+        discovered = discovered or true
+        weight = weight or 1
+        kind = kind or ""
+        cost = cost or 4
+        pos = pos or {x=0, y=5}
+        config = config or {}
+        desc = desc or {"Placeholder"}
+        alerted = alerted or true
+        sprite_path = sprite_path or nil
+        sprite_name = sprite_name or nil
+        sprite_size = sprite_size or nil
+        selection_state = selection_state or G.STATES.TAROT_PACK
+        if selection_state ~= G.STATES.TAROT_PACK and selection_state ~= G.STATES.PLANET_PACK and selection_state ~= G.STATES.SPECTRAL_PACK and selection_state ~= G.STATES.STANDARD_PACK and selection_state ~= G.STATES.BUFFOON_PACK then
+            sendDebugMessage(id..": selection_state incorrectly defined")
+        end
+
+        local modded_sprite = nil
+        if sprite_path and sprite_name then
+            modded_sprite = true
+        else
+            modded_sprite = false
+        end
+
+        local newBooster = {
+            name = name,
+            order = order,
+            discovered = discovered,
+            weight = weight,
+            kind = kind,
+            cost = cost,
+            pos = pos,
+            atlas = "Booster",
+            set = "Booster",
+            config = config,
+            desc = desc,
+            alerted = alerted,
+            modded_sprite = modded_sprite,
+            key = id,
+            modded = true,
+            selection_state = selection_state
+        }
+
+        table.insert(G.P_CENTER_POOLS["Booster"], newBooster)
+        G.P_CENTERS[id] = newBooster
+
+        --add name + description to the localization object
+        local newBoosterText = {name=name, text=desc, text_parsed={}, name_parsed={}}
+        for _, line in ipairs(desc) do
+            newBoosterText.text_parsed[#newBoosterText.text_parsed+1] = loc_parse_string(line)
+        end
+        for _, line in ipairs(type(newBoosterText.name) == 'table' and newBoosterText.name or {newBooster.name}) do
+            newBoosterText.name_parsed[#newBoosterText.name_parsed+1] = loc_parse_string(line)
+        end
+        G.localization.descriptions.Other[id] = newBoosterText
+
+        --add sprite to sprite atlas
+        if sprite_name and sprite_path then
+            local actual_sprite_path = sprite_path.."/"..G.SETTINGS.GRAPHICS.texture_scaling.."x/"..sprite_name
+            addSprite(id, actual_sprite_path, sprite_size)
+        else
+            sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
+        end
+
+        --add effect to centerhook table
+        table.insert(centerHook.boosterEffects, pack_contents)
+
+        --save indices for removal
+        centerHook.boosters[id] = {
+            pool_indices = {#G.P_CENTER_POOLS["Booster"]},
+            use_indices = {#centerHook.boosterEffects}
+        }
+
+        return newBooster, newBoosterText
     end
     return centerHook
 end
@@ -731,6 +819,7 @@ table.insert(mods,
                 patched_modded_planet_logic = true
             end
 
+            --add pages to planet collection page
             if not patched_planet_collection then
                 G.FUNCS.your_collection_planet_page = g_funcs_your_collection_planet_page
 
@@ -751,6 +840,7 @@ table.insert(mods,
                 patched_planet_collection = true
             end
 
+            --add modded voucher effects to buying voucher
             if not patched_voucher_effects then
                 local fun_name = "Card:apply_to_run"
                 local file_name = "card.lua"
@@ -759,6 +849,56 @@ table.insert(mods,
     end]]
                 injectTail(file_name, fun_name, replacement)
                 patched_voucher_effects = true
+            end
+
+            --change opening booster packs to work with modded booster packs
+            --also change voucher redeem to not cost money when taking a voucher from a booster pack
+            if not patched_open_booster then
+                local fun_name = "Card:open"
+                local file_name = "card.lua"
+                local to_replace = "card.T.x = self.T.x"
+                local replacement = [[for _, pack_content in pairs(centerHook.boosterEffects) do
+                            card = pack_content(self) or card
+                        end
+                        card.T.x = self.T.x]]
+                inject(file_name, fun_name, to_replace, replacement)
+
+                local to_replace = "G.GAME.pack_choices = self.config.center.config.choose or 1"
+                local replacement = [[if self.config.center.modded then
+            G.STATE = self.config.center.selection_state
+            G.GAME.pack_size = self.ability.extra
+        end
+                
+        G.GAME.pack_choices = self.config.center.config.choose or 1]]
+                inject(file_name, fun_name, to_replace, replacement)
+
+                local fun_name = "Card:redeem"
+                local to_replace = [[ease_dollars%(%-self%.cost%)
+        inc_career_stat%('c_shop_dollars_spent', self.cost%)
+        inc_career_stat%('c_vouchers_bought', 1%)
+        set_voucher_usage%(self%)
+        check_for_unlock%(%{type = 'run_redeem'%}%)
+        G.GAME.current_round.voucher = nil]]
+                local replacement = [[if G.STATE ~= G.STATES.TAROT_PACK and G.STATE ~= G.STATES.PLANET_PACK and G.STATE ~= G.STATES.SPECTRAL_PACK and G.STATE ~= G.STATES.STANDARD_PACK and G.STATE ~= G.STATES.BUFFOON_PACK then
+            ease_dollars(-self.cost)
+            inc_career_stat('c_shop_dollars_spent', self.cost)
+            G.GAME.current_round.voucher = nil
+        end
+        inc_career_stat('c_vouchers_bought', 1)
+        set_voucher_usage(self)
+        check_for_unlock({type = 'run_redeem'})]]
+                inject(file_name, fun_name, to_replace, replacement)
+                patched_open_booster = true
+            end
+
+            --change description to properly display modded booster pack descriptions
+            if not patched_booster_desc_ui then
+                local fun_name = "generate_card_ui"
+                local file_name = "functions/common_events.lua"
+                local to_replace = "local desc_override = 'p_arcana_normal'"
+                local replacement = "local desc_override = _c.key"
+                inject(file_name, fun_name, to_replace, replacement)
+                patched_booster_desc_ui = true
             end
         end
     }

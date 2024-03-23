@@ -12,6 +12,7 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Ganymede](#ganymede-modsc_ganymedelua)
     - [Jonkler](#the-jonkler-modsj_jonklerlua)
     - [Hobby Shop](#hobby-shop-modsv_hobby_shoplua)
+    - [Coupon Book](#coupon-book-modsp_coupon_booklua)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
@@ -136,6 +137,18 @@ A voucher card that allows you to refresh purchased booster packs
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/v_card_shop.gif)
 
+## Coupon Book (mods/p_coupon_book.lua)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+> [!WARNING]
+> **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+A booster pack that allows you to redeem 1 of 2 vouchers
+
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/p_coupon_book.gif)
+
 # Useful Documentation
 
 ## 'Cheating' in a card
@@ -184,8 +197,6 @@ G.E_MANAGER:add_event(Event({
 
 ## Contexts
 Used in Card:calculate_joker. Defines what event is happening during the game.
-
-Example usage in [Test Joker](#test-joker).
 - `context.open_booster` (hallucination)
 - `context.buying_card` ()
 - `context.selling_self` (luchador, diet cola, invisible joker)

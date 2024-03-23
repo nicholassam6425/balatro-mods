@@ -91,22 +91,22 @@ table.insert(mods, {
     enabled = true,
     on_enable = function()
         centerHook.addVoucher(self,
-            "v_hobby_shop_arachnei",
-            "Hobby Shop",
-            voucherEffect,
-            nil,
-            true,
-            true,
-            true,
-            10,
-            {x=0, y=0},
-            {},
-            nil,
-            { "Shop rerolls also restock", "purchased {C:attention}Booster Pack{}" },
-            true,
-            "assets", 
-            "card shop.png", 
-            {px=71, py=95}
+            "v_hobby_shop_arachnei", --id
+            "Hobby Shop",            --name
+            voucherEffect,           --effect on redeem
+            nil,                     --order
+            true,                    --discovered
+            true,                    --unlocked
+            true,                    --available
+            10,                      --cost
+            {x=0, y=0},              --sprite pos
+            {},                      --config
+            nil,                     --requires
+            { "Shop rerolls also restock", "purchased {C:attention}Booster Pack{}" }, --description
+            true,                    --alerted
+            "assets",                --sprite path
+            "card shop.png",         --sprite name
+            {px=71, py=95}           --sprite size
         )
         old_shop_reroll_func = G.FUNCS.reroll_shop
         G.FUNCS.reroll_shop = card_shop_reroll_func
