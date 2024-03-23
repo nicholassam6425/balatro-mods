@@ -22,7 +22,7 @@ table.insert(mods, {
             pack_contents,              --pack contents
             nil,                        --order
             true,                       --discovered
-            1,                          --weight
+            0.2,                          --weight
             "Standard",                 --kind
             12,                         --cost
             {x=0,y=0},                  --pos
