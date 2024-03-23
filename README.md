@@ -13,6 +13,10 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [Jonkler](#the-jonkler-modsj_jonklerlua)
     - [Hobby Shop](#hobby-shop-modsv_hobby_shoplua)
     - [Coupon Book](#coupon-book-modsp_coupon_booklua)
+- [Installation Guide](#installation-guide)
+    - [Windows](#windows)
+    - [macOS](#macos)
+    - [Linux](#linux)
 - [Useful Documentation](#useful-documentation)
     - ['Cheating' in a card](#cheating-in-a-card)
     - [Contexts](#contexts)
@@ -57,6 +61,8 @@ You may remove the ante 1 restriction for your own installation if you wish.
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
+**Sprite name:** `bezos spectral.png`
+
 An example spectral card that gives you $100 on use.
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_bezos.gif)
@@ -68,6 +74,8 @@ An example spectral card that gives you $100 on use.
 
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+**Sprite name:** `Jokers.png`
 
 An example joker card that gives all played cards +2 mult
 
@@ -81,6 +89,8 @@ An example joker card that gives all played cards +2 mult
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
+**Sprite name:** `humanity tarot.png`
+
 An example tarot card that averages the ranks of selected cards
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_humanity.gif)
@@ -92,6 +102,8 @@ An example tarot card that averages the ranks of selected cards
 
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+**Sprite name:** `sols joker.png`
 
 A joker card that gives you X4 mult if you play at least 4 cards that contain any sequence in DISASTERMODE (5776578588). The cards must be in the correct order (i.e 5776 will work, but 5677 will not)
 
@@ -107,6 +119,8 @@ A joker card that gives you X4 mult if you play at least 4 cards that contain an
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
+**Sprite name:** `Ganymede.png`
+
 A planet card that levels up all hands that contain flushes
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/c_ganymede.gif)
@@ -117,6 +131,8 @@ A planet card that levels up all hands that contain flushes
 | ✔️ | ❌ |
 
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
+
+**Sprite name:** `the jonkler.png`
 
 A simple joker card that gives X1.8 mult. 
 
@@ -133,6 +149,8 @@ A simple joker card that gives X1.8 mult.
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
+**Sprite name:** `card shop.png`
+
 A voucher card that allows you to refresh purchased booster packs
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/v_card_shop.gif)
@@ -145,10 +163,73 @@ A voucher card that allows you to refresh purchased booster packs
 > [!WARNING]
 > **REQUIRES** [Center Hook](#center-hook-apiscenter_hooklua)
 
+**Sprite name:** `coupon book.png`
+
 A booster pack that allows you to redeem 1 of 2 vouchers
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/p_coupon_book.gif)
 
+# Installation Guide
+## Balamod
+### Windows
+For example, if we wanted only the "Hobby Shop" Voucher
+```
+Roaming
+|- Balatro
+|  |- mods
+|  |  |- v_hobby_shop.lua
+|  |- assets
+|  |  |- 1x
+|  |  |  |- card shop.png
+|  |  |- 2x
+|  |  |  |- card shop.png
+|  |- apis
+|  |  |- center_hook.lua
+```
+### macOS
+For example, if we wanted only the "Hobby Shop" Voucher
+```
+~/Library/Application Support
+|- Balatro
+|  |- mods
+|  |  |- v_hobby_shop.lua
+|  |- assets
+|  |  |- 1x
+|  |  |  |- card shop.png
+|  |  |- 2x
+|  |  |  |- card shop.png
+|  |- apis
+|  |  |- center_hook.lua
+```
+### Linux
+For example, if we wanted only the "Hobby Shop" Voucher
+```
+~/.local/share
+|- Balatro
+|  |- mods
+|  |  |- v_hobby_shop.lua
+|  |- assets
+|  |  |- 1x
+|  |  |  |- card shop.png
+|  |  |- 2x
+|  |  |  |- card shop.png
+|  |- apis
+|  |  |- center_hook.lua
+```
+OR
+```
+$XDG_DATA_HOME
+|- Balatro
+|  |- mods
+|  |  |- v_hobby_shop.lua
+|  |- assets
+|  |  |- 1x
+|  |  |  |- card shop.png
+|  |  |- 2x
+|  |  |  |- card shop.png
+|  |- apis
+|  |  |- center_hook.lua
+```
 # Useful Documentation
 
 ## 'Cheating' in a card
