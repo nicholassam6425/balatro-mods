@@ -165,6 +165,8 @@ A voucher card that allows you to refresh purchased booster packs
 
 **Sprite name:** `coupon book.png`
 
+**Art by: thatobserver** thank you!!!
+
 A booster pack that allows you to redeem 1 of 2 vouchers
 
 ![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/p_coupon_book.gif)
@@ -432,8 +434,8 @@ List of methods, their parameters, and what they return
         - id (string): the id you used to add the joker to the game
     - returns:
         - nothing
-- centerHook.addTarot & centerHook.addSpectral
-    adds a tarot/spectral card to the game
+- centerHook.addTarot & centerHook.addSpectral & centerHook.addPlanet
+    adds a tarot/spectral/planet card to the game
 
     (yeah they're pretty much the same)
     - parameters:
@@ -465,11 +467,94 @@ List of methods, their parameters, and what they return
             > You **MUST** have 1x and 2x folders in your `sprite_path` folder. 
             - If your sprites are located in `Roaming/Balatro/assets/1x` or `Roaming/Balatro/assets/2x`, then your `sprite_path` will simply be `"assets"`. I'll look at making this more flexible in the future.
     - returns:
-        - newTarot (table): the table that defines that card that gets loaded into the game
-        - newTarotText (table): the table that holds all the card text data
-- centerHook.removeTarot & centerHook.removeSpectral
-    remove a **modded** tarot/spectral from the game
+        - newTarot/newSpectral/newPlanet (table): the table that defines that card that gets loaded into the game
+        - newTarotText/newSpectralText/newPlanetText (table): the table that holds all the card text data
+- centerHook.removeTarot & centerHook.removeSpectral & centerHook.removePlanet
+    remove a **modded** tarot/spectral/planet from the game
     - parameters:
-        - id (string): the id you used to add the tarot to the game
+        - id (string): the id you used to add the card to the game
+    - returns:
+        - nothing
+- centerHook.addVoucher
+    add a voucher to the game
+    - parameters:
+        - id (string): the internal name of the consumeable card (i.e "c_humanity_arachnei")
+            - I'd suggest adding a unique modifier to your id, like how I add my name to the end of the id to avoid easily avoidable mod conflicts.
+        - name (string): the actual name of the consumeable card (i.e "Jokers")
+            - This is used both for the display name of the card, as well as for how the game knows which 'card' is currently being used. I may separate these two values in the future to avoid mod conflicts
+        - voucher_effect (function): the effect ON REDEEM
+            - This function does not require a `return` statement. This effect only happens once, when the voucher is redeemed. *Hobby Shop* does not have an on-redeem effect, and rather changes how the shop reroll functions.
+        - order (int): a number that the game uses to order the cards in the collection tab
+            - If you're unsure what to put here, leave it as `nil`. It will add it to the end of the collection.
+        - discovered (bool): defines whether or not the card is discovered in the collection or not
+            - I haven't tested this. I think it functionally works, but visually will not use the undiscovered card sprite in the collection.
+        - cost (int): the cost of the card
+        - pos (table: {x=int, y=int}): defines the position of the card's sprite in the spritesheet
+            - If left as `nil`, it will use a blank sprite. x and y start from 0, in the top left of the sprite sheet.
+        - config (table): a table of numerical values used in the card
+            - Not really needed for a voucher, I don't think
+        - requires (table of string): a table of voucher ids required before this voucher will appear in shops
+            - I'm actually not sure if this allows more than 1 string. There's no example of it in the base game, and I don't actually know where the code for the require is. Use more than 2 requires with caution.
+        - desc (table of strings): the displayed description text of the card
+            - I'll write a separate section of description formatting soon. For now: `{C:attention}text{}` for cards, `{C:red}text{}` for mult, and `{C:chips}text{}` for chips. You can find all the game's descriptions in the localization folder of the decompiled game
+        - alerted (bool): Defines if the joker will have an alert or not in the collection
+            - Thank you HeyImKyu for finding this. 
+        - sprite_path (string)
+        - sprite_name (string)
+        - sprite_size (table {px=int, py=int})
+            > [!WARNING]
+            > You **MUST** have 1x and 2x folders in your `sprite_path` folder. 
+            - If your sprites are located in `Roaming/Balatro/assets/1x` or `Roaming/Balatro/assets/2x`, then your `sprite_path` will simply be `"assets"`. I'll look at making this more flexible in the future.
+    - returns:
+        - newVoucher (table): the table that defines that card that gets loaded into the game
+        - newVoucherText (table): the table that holds all the card text data
+- centerHook.removeVoucher
+    remove a **MODDED** voucher from the game
+    - parameters:
+        - id (string): the id you used to add the card to the game
+    - returns:
+        - nothing
+- centerHook.addBooster
+    add a booster pack to the game
+    - parameters:
+        - id (string): the internal name of the consumeable card (i.e "c_humanity_arachnei")
+            - I'd suggest adding a unique modifier to your id, like how I add my name to the end of the id to avoid easily avoidable mod conflicts.
+        - name (string): the actual name of the consumeable card (i.e "Jokers")
+            - This is used both for the display name of the card, as well as for how the game knows which 'card' is currently being used. I may separate these two values in the future to avoid mod conflicts
+        - pack_contents (function): function that returns the pack contents
+            - This is called `config.extra` times. It should return 1 `card` object. Vanilla examples are found in `Card:open` in `card.lua`
+            - order (int): a number that the game uses to order the cards in the collection tab
+            - If you're unsure what to put here, leave it as `nil`. It will add it to the end of the collection.
+        - discovered (bool): defines whether or not the card is discovered in the collection or not
+            - I haven't tested this. I think it functionally works, but visually will not use the undiscovered card sprite in the collection.
+        - weight (float): the likelihood the booster pack will appear in the shop
+            - lower number = lower rate. Vanilla weights are 0.15-1.0. IMO avoid using weights over 1.5, except for testing reasons, as it would make your booster appear much too frequently
+        - kind (string): what 'kind' of booster pack it is
+            - i'm pretty sure this actually isnt even used in game logic. would be nice if it did, but the game checks what booster pack is being opened by name rather than 'kind' so... yeah.
+        - cost (int): the cost of the card
+        - pos (table: {x=int, y=int}): defines the position of the card's sprite in the spritesheet
+            - If left as `nil`, it will use a blank sprite. x and y start from 0, in the top left of the sprite sheet.
+        - config (table): a table of numerical values used in the card
+            - **REQUIRES** {extra: int, choose: int}
+            - `extra` represents how many cards you can choose out of, `choose` represents how many cards you can choose. I.E Mega Buffoon Pack would be `{extra=4, choose=2}`
+        - requires (table of string): a table of voucher ids required before this voucher will appear in shops
+            - I'm actually not sure if this allows more than 1 string. There's no example of it in the base game, and I don't actually know where the code for the require is. Use more than 2 requires with caution.
+        - desc (table of strings): the displayed description text of the card
+            - I'll write a separate section of description formatting soon. For now: `{C:attention}text{}` for cards, `{C:red}text{}` for mult, and `{C:chips}text{}` for chips. You can find all the game's descriptions in the localization folder of the decompiled game
+        - alerted (bool): Defines if the joker will have an alert or not in the collection
+            - Thank you HeyImKyu for finding this. 
+        - sprite_path (string)
+        - sprite_name (string)
+        - sprite_size (table {px=int, py=int})
+            > [!WARNING]
+            > You **MUST** have 1x and 2x folders in your `sprite_path` folder. 
+            - If your sprites are located in `Roaming/Balatro/assets/1x` or `Roaming/Balatro/assets/2x`, then your `sprite_path` will simply be `"assets"`. I'll look at making this more flexible in the future.
+    - returns:
+        - newBooster (table): the table that defines that card that gets loaded into the game
+        - newBoosterText (table): the table that holds all the card text data
+- centerHook.removeBooster
+    remove a **MODDED** booster from the game
+    - parameters:
+        - id (string): the id you used to add the card to the game
     - returns:
         - nothing

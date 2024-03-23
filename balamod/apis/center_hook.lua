@@ -68,7 +68,7 @@ function initCenterHook()
     centerHook.boosters = {}
 
     --[[
-        remove given joker from the game
+        remove given modded joker from the game
 
         inputs:
             id: string
@@ -96,7 +96,7 @@ function initCenterHook()
             order: int
             discovered: bool
             cost: int
-            pos: {x:int, y:int} or nil
+            pos: {x:int, y:int}
             effect: string
             config: table (Read Useful Documentation in the readme for help)
             desc: table of strings
@@ -193,8 +193,10 @@ function initCenterHook()
             sendDebugMessage("Sprite not defined or incorrectly defined for "..tostring(id))
         end
 
+        --add joker effect to game
         table.insert(centerHook.jokerEffects, use_effect)
-        table.insert(centerHook.jokers, {name=name, id=id})
+
+        --save indices for removal
         centerHook.jokers[id] = {
             pool_indices={#G.P_CENTER_POOLS["Joker"], #G.P_JOKER_RARITY_POOLS[rarity]}, 
             use_indices={#centerHook.jokerEffects},
@@ -203,7 +205,7 @@ function initCenterHook()
     end
 
     --[[
-        remove given tarot from the game
+        remove given modded tarot from the game
 
         params:
             id: string
@@ -237,6 +239,9 @@ function initCenterHook()
             config: table
             desc: table of strings
             alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
         returns:
             newTarot: the tarot card table
             newTarotText: the tarot card text table
@@ -315,6 +320,14 @@ function initCenterHook()
         return newTarot, newTarotText
     end
 
+    --[[
+        remove given modded planet from the game
+
+        inputs:
+            id: string
+        returns:
+            nil
+    ]]
     function centerHook:removePlanet(id)
         table.remove(G.P_CENTER_POOLS["Planet"], centerHook.planets[id].pool_indices[1])
         table.remove(G.P_CENTER_POOLS["Tarot_Planet"], centerHook.planets[id].pool_indices[2])
@@ -327,6 +340,29 @@ function initCenterHook()
         centerHook.planets[id] = nil
     end
 
+    --[[
+        add given planet card, and given parameters, to the game
+
+        
+        params:
+            id: string
+            name: string
+            use_effect: function
+            use_condition: function
+            order: int
+            discovered: bool
+            cost: int
+            pos: {x:int, y:int}
+            config: table
+            desc: table of strings
+            alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
+        returns:
+            newPlanet: the planet card table
+            newPlanetText: the planet card text table
+    ]]
     function centerHook:addPlanet(id, name, use_effect, use_condition, order, discovered, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size)
         id = id or "c_pl_placeholder" .. #G.P_CENTER_POOLS["Planet"] + 1
         name = name or "Planet Placeholder"
@@ -402,7 +438,7 @@ function initCenterHook()
         return newPlanet, newPlanetText
     end
     --[[
-        remove given spectral card from the game
+        remove given modded spectral card from the game
 
         params:
             id: string
@@ -432,9 +468,13 @@ function initCenterHook()
             order: int
             discovered: bool
             cost: int
-            pos: {x:int, y:int} or nil 
+            pos: {x:int, y:int}
             config: table
             desc: table of strings
+            alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
         returns:
             newSpectral: the spectral card table
             newSpectralText: the spectral card text table
@@ -514,6 +554,14 @@ function initCenterHook()
         return newSpectral, newSpectralText
     end
 
+    --[[
+        remove given modded voucher from the game
+
+        inputs:
+            id: string
+        returns:
+            nil
+    ]]
     function centerHook:removeVoucher(id)
         table.remove(G.P_CENTER_POOLS["Voucher"], centerHook.vouchers[id].pool_indices[1])
         G.P_CENTERS[id] = nil
@@ -523,6 +571,29 @@ function initCenterHook()
         centerHook.vouchers[id] = nil
     end
 
+    --[[
+        add given voucher, and given parameters, to the game
+
+        
+        params:
+            id: string
+            name: string
+            voucher_effect: function
+            order: int
+            discovered: bool
+            cost: int
+            pos: {x:int, y:int}
+            config: table
+            requires: table of strings
+            desc: table of strings
+            alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
+        returns:
+            newVoucher: the voucher table
+            newVoucherText: the voucher text table
+    ]]
     function centerHook:addVoucher(id, name, voucher_effect, order, discovered, unlocked, available, cost, pos, config, requires, desc, alerted, sprite_path, sprite_name, sprite_size)
         id = id or "v_placeholder" .. #G.P_CENTER_POOLS["Voucher"] + 1
         name = name or "Voucher Placeholder"
@@ -597,6 +668,14 @@ function initCenterHook()
         return newVoucher, newVoucherText
     end
 
+    --[[
+        remove given modded booster from the game
+
+        inputs:
+            id: string
+        returns:
+            nil
+    ]]
     function centerHook:removeBooster(id)
         table.remove(G.P_CENTER_POOLS["Booster"], centerHook.boosters[id].pool_indices[1])
         G.P_CENTERS[id] = nil
@@ -606,6 +685,31 @@ function initCenterHook()
         centerHook.vouchers[id] = nil
     end
 
+    --[[
+        add given booster pack, and given parameters, to the game
+
+        
+        params:
+            id: string
+            name: string
+            pack_contents: function
+            order: int
+            discovered: bool
+            weight: float
+            kind: string
+            cost: int
+            pos: {x:int, y:int}
+            config: {extra:int, choose:int}
+            desc: table of strings
+            alerted: bool
+            sprite_path: string
+            sprite_name: string
+            sprite_size: {px:int, py:int}
+            selection_state: G.STATES.TAROT_PACK or G.STATES.PLANET_PACK or G.STATES.SPECTRAL_PACK or G.STATES.STANDARD_PACK or G.STATES.BUFFOON_PACK
+        returns:
+            newBooster: the booster pack table
+            newBoosterText: the booster pack text table
+    ]]
     function centerHook:addBooster(id, name, pack_contents, order, discovered, weight, kind, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size, selection_state)
         id = id or "p_placeholder" .. #G.P_CENTER_POOLS["Booster"] + 1
         name = name or "Placeholder Pack"

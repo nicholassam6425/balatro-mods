@@ -27,7 +27,7 @@ table.insert(mods, {
             12,                         --cost
             {x=0,y=0},                  --pos
             {extra = 2, choose = 1},    --config
-            {"Choose {C:attention}1{} of up to","{C:attention}2{} Vouchers to be", "redeemed immediately"},
+            {"Choose {C:attention}1{} of up to","{C:attention}2{} Vouchers to be", "redeemed immediately", "{C:inactive}Art by: thatobserver"},
             true,                       --alerted
             "assets",                   --sprite path
             "coupon book.png",          --sprite name
