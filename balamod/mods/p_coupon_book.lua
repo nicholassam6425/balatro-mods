@@ -34,6 +34,8 @@ table.insert(mods, {
             {px=71, py=95},             --sprite size
             G.STATES.PLANET_PACK        --selection_state
         )
-        
     end,
+    on_disable = function()
+        centerHook.removeBooster(self, "p_coupon_book_arachnei")
+    end
 })

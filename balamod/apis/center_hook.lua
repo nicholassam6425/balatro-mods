@@ -597,6 +597,15 @@ function initCenterHook()
         return newVoucher, newVoucherText
     end
 
+    function centerHook:removeBooster(id)
+        table.remove(G.P_CENTER_POOLS["Booster"], centerHook.boosters[id].pool_indices[1])
+        G.P_CENTERS[id] = nil
+        G.localization.descriptions.Other[id] = nil
+        table.remove(centerHook.boosterEffects, centerHook.boosters[id].use_indices[1])
+        G.ASSET_ATLAS[id] = nil
+        centerHook.vouchers[id] = nil
+    end
+
     function centerHook:addBooster(id, name, pack_contents, order, discovered, weight, kind, cost, pos, config, desc, alerted, sprite_path, sprite_name, sprite_size, selection_state)
         id = id or "p_placeholder" .. #G.P_CENTER_POOLS["Booster"] + 1
         name = name or "Placeholder Pack"
