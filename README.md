@@ -18,10 +18,6 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
     - [macOS](#macos)
     - [Linux](#linux)
 - [Useful Documentation](#useful-documentation)
-    - ['Cheating' in a card](#cheating-in-a-card)
-    - [Contexts](#contexts)
-    - [Unlock Conditions](#unlock-conditions)
-    - [Joker.config](#jokerconfig)
 
 # Mods/APIs
 
