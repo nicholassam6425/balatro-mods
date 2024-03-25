@@ -12,10 +12,8 @@ function G.FUNCS.reroll_tags()
 
     --get rid of old blind select boxes
     G.E_MANAGER:add_event(Event({
-        trigger = 'before',
-        delay = 0.2,
+        trigger = 'immediate',
         func = function()
-            G.blind_prompt_box.alignment.offset.y = -10
             G.blind_select.alignment.offset.y = 40
             G.blind_select.alignment.offset.x = 0
             return true
@@ -25,6 +23,7 @@ function G.FUNCS.reroll_tags()
         trigger = 'immediate',
         func = function()
             G.blind_select:remove()
+            G.blind_prompt_box:remove()
             G.blind_select = nil
             delay(0.2)
             return true
@@ -61,7 +60,7 @@ end
 local ref = love.keypressed
 function love.keypressed(key)
     ref(key)
-    if key == 'f2' then
+    if key == 'f2' and G.GAME.round_resets.blind_tags and G.blind_select then
         G.FUNCS.reroll_tags()
     end
 end
