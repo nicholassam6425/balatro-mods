@@ -9,7 +9,7 @@ table.insert(mods,
         version = mod_version,
         author = mod_author,
         on_key_pressed = function(key_name)
-            if G.GAME.round_resets.ante == 1 and key_name == "f2" then
+            if G.GAME.round_resets.blind_tags and G.GAME.round_resets.ante == 1 and key_name == "f2" then
                 G.GAME.round_resets.blind_tags.Small = get_next_tag_key()
                 G.GAME.round_resets.blind_tags.Big = get_next_tag_key()
 
