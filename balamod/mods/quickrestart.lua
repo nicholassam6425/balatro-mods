@@ -9,17 +9,15 @@ table.insert(mods,
         version = mod_version,
         author = mod_author,
         on_key_pressed = function(key_name)
-            if G.GAME.round_resets.blind_tags and G.GAME.round_resets.ante == 1 and key_name == "f2" then
+            if G.GAME.round_resets.blind_tags and G.blind_select and G.GAME.round_resets.ante == 1 and key_name == "f2" then
                 G.GAME.round_resets.blind_tags.Small = get_next_tag_key()
                 G.GAME.round_resets.blind_tags.Big = get_next_tag_key()
 
                 --get rid of old blind select boxes
                 G.E_MANAGER:add_event(Event({
-                    trigger = 'before',
-                    delay = 0.2,
+                    trigger = 'immediate',
                     func = function()
-                        G.blind_prompt_box.alignment.offset.y = -10
-                        G.blind_select.alignment.offset.y = 40
+                        G.blind_select.alignment.offset.y = 80
                         G.blind_select.alignment.offset.x = 0
                         return true
                     end
@@ -30,7 +28,6 @@ table.insert(mods,
                         G.blind_select:remove()
                         G.blind_prompt_box:remove()
                         G.blind_select = nil
-                        delay(0.2)
                         return true
                     end
                 }))
