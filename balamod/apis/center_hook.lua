@@ -77,11 +77,11 @@ function initCenterHook()
     ]]
     function centerHook:removeJoker(id)
         local rarity = G.P_CENTERS[id].rarity
-        table.remove(G.P_CENTER_POOLS['Joker'], centerHook.jokers[id].pool_indices[1])
-        table.remove(G.P_JOKER_RARITY_POOLS[rarity], centerHook.jokers[id].pool_indices[2])
+        G.P_CENTER_POOLS['Joker'][centerHook.jokers[id].pool_indices[1]] = nil
+        G.P_JOKER_RARITY_POOLS[rarity][centerHook.jokers[id].pool_indices[2]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Joker[id] = nil
-        table.remove(centerHook.jokerEffects, centerHook.jokers[id].use_indices[1])
+        centerHook.jokerEffects[centerHook.jokers[id].use_indices[1]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.jokers[id] = nil
     end
@@ -213,13 +213,14 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removeTarot(id)
-        table.remove(G.P_CENTER_POOLS["Tarot"], centerHook.tarots[id].pool_indices[1])
-        table.remove(G.P_CENTER_POOLS["Tarot_Planet"], centerHook.tarots[id].pool_indices[2])
-        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.tarots[id].pool_indices[3])
+
+        G.P_CENTER_POOLS["Tarot"][centerHook.tarots[id].pool_indices[1]] = nil
+        G.P_CENTER_POOLS["Tarot_Planet"][centerHook.tarots[id].pool_indices[2]] = nil
+        G.P_CENTER_POOLS["Consumeables"][centerHook.tarots[id].pool_indices[3]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Tarot[id] = nil
-        table.remove(centerHook.consumeableEffects, centerHook.tarots[id].use_indices[1])
-        table.remove(centerHook.canUseConsumeable, centerHook.tarots[id].use_indices[2])
+        centerHook.consumeableEffects[centerHook.tarots[id].use_indices[1]] = nil
+        centerHook.canUseConsumeable[centerHook.tarots[id].use_indices[2]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.tarots[id] = nil
     end
@@ -329,13 +330,13 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removePlanet(id)
-        table.remove(G.P_CENTER_POOLS["Planet"], centerHook.planets[id].pool_indices[1])
-        table.remove(G.P_CENTER_POOLS["Tarot_Planet"], centerHook.planets[id].pool_indices[2])
-        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.planets[id].pool_indices[3])
+        G.P_CENTER_POOLS["Planet"][centerHook.planets[id].pool_indices[1]] = nil
+        G.P_CENTER_POOLS["Tarot_Planet"][centerHook.planets[id].pool_indices[2]] = nil
+        G.P_CENTER_POOLS["Consumeables"][centerHook.planets[id].pool_indices[3]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Planet[id] = nil
-        table.remove(centerHook.consumeableEffects, centerHook.planets[id].use_indices[1])
-        table.remove(centerHook.canUseConsumeable, centerHook.planets[id].use_indices[2])
+        centerHook.consumeableEffects[centerHook.planets[id].use_indices[1]] = nil
+        centerHook.canUseConsumeable[centerHook.planets[id].use_indices[2]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.planets[id] = nil
     end
@@ -446,12 +447,12 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removeSpectral(id)
-        table.remove(G.P_CENTER_POOLS["Spectral"], centerHook.spectrals[id].pool_indices[1])
-        table.remove(G.P_CENTER_POOLS["Consumeables"], centerHook.spectrals[id].pool_indices[2])
+        G.P_CENTER_POOLS["Spectral"][centerHook.spectrals[id].pool_indices[1]] = nil
+        G.P_CENTER_POOLS["Consumeables"][centerHook.spectrals[id].pool_indices[2]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Spectral[id] = nil
-        table.remove(centerHook.consumeableEffects, centerHook.spectrals[id].use_indices[1])
-        table.remove(centerHook.canUseConsumeable, centerHook.spectrals[id].use_indices[2])
+        centerHook.consumeableEffects[centerHook.spectrals[id].use_indices[1]] = nil
+        centerHook.canUseConsumeable[centerHook.spectrals[id].use_indices[2]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.spectrals[id] = nil
     end
@@ -563,10 +564,10 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removeVoucher(id)
-        table.remove(G.P_CENTER_POOLS["Voucher"], centerHook.vouchers[id].pool_indices[1])
+        G.P_CENTER_POOLS["Voucher"][centerHook.vouchers[id].pool_indices[1]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Voucher[id] = nil
-        table.remove(centerHook.voucherEffects, centerHook.vouchers[id].use_indices[1])
+        centerHook.voucherEffects[centerHook.vouchers[id].use_indices[1]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.vouchers[id] = nil
     end
@@ -677,10 +678,10 @@ function initCenterHook()
             nil
     ]]
     function centerHook:removeBooster(id)
-        table.remove(G.P_CENTER_POOLS["Booster"], centerHook.boosters[id].pool_indices[1])
+        G.P_CENTER_POOLS["Booster"][centerHook.boosters[id].pool_indices[1]] = nil
         G.P_CENTERS[id] = nil
         G.localization.descriptions.Other[id] = nil
-        table.remove(centerHook.boosterEffects, centerHook.boosters[id].use_indices[1])
+        centerHook.boosterEffects[centerHook.boosters[id].use_indices[1]] = nil
         G.ASSET_ATLAS[id] = nil
         centerHook.vouchers[id] = nil
     end
