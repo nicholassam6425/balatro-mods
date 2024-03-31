@@ -1,0 +1,9 @@
+{
+    "id": "jokerapi_test",
+    "name": "jokerapi test",
+    "version": "0.0.1",
+    "author": "arachnei",
+    "description": [],
+    "load_before": [],
+    "load_after": []
+}
