@@ -3,6 +3,7 @@
 requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from
 
 - [Mods & APIs](#modsapis)
+    - [Fortune](#fortune-httpsgithubcomnicholassam6425balatro-fortune)
     - [Center Hook](#center-hook-apiscenter_hooklua)
     - [Quick Restart](#quick-restart-modsquickrestartlua)
     - [Bezos](#bezos-modsc_bezoslua)
@@ -20,6 +21,17 @@ requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/ma
 - [Useful Documentation](#useful-documentation)
 
 # Mods/APIs
+
+## Fortune (https://github.com/nicholassam6425/balatro-fortune)
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | ❌ |
+
+A fortune-based mod pack with 6 Jokers, 1 Tarot and 1 Spectral.
+
+[Info Page](https://nicholassam6425.github.io/balatro/arachnei_fortune/)
+
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/fortune tree cashout.gif)
 
 ## Center Hook (apis/center_hook.lua)
 | Balamod | Steamodded |
