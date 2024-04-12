@@ -31,7 +31,7 @@ A fortune-based mod pack with 6 Jokers, 1 Tarot and 1 Spectral.
 
 [Info Page](https://nicholassam6425.github.io/balatro/arachnei_fortune/)
 
-![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/fortune tree cashout.gif)
+![](https://github.com/nicholassam6425/balatro-mods/blob/main/misc%20assets/fortune%20tree%20cashout.gif)
 
 ## Center Hook (apis/center_hook.lua)
 | Balamod | Steamodded |
