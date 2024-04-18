@@ -1,7 +1,7 @@
-mod_id = "quick_restart"
-mod_name = "Quick Restart"
-mod_version = "1.0"
-mod_author = "arachnei"
+local mod_id = "quick_restart"
+local mod_name = "Quick Restart"
+local mod_version = "1.0"
+local mod_author = "arachnei"
 table.insert(mods,
     {
         mod_id = mod_id,
@@ -9,7 +9,7 @@ table.insert(mods,
         version = mod_version,
         author = mod_author,
         on_key_pressed = function(key_name)
-            if G.GAME.round_resets.blind_tags and G.blind_select and G.GAME.round_resets.ante == 1 and key_name == "f2" then
+            if key_name == "f2" and G.STATE == G.STATES.BLIND_SELECT and G.GAME.round_resets.blind_tags and G.blind_select and G.GAME.round_resets.ante == 1 then
                 G.GAME.round_resets.blind_tags.Small = get_next_tag_key()
                 G.GAME.round_resets.blind_tags.Big = get_next_tag_key()
 

@@ -60,7 +60,7 @@ end
 local ref = love.keypressed
 function love.keypressed(key)
     ref(key)
-    if key == 'f2' and G.GAME.round_resets.blind_tags and G.blind_select then
+    if key == 'f2' and G.STATE == G.STATES.BLIND_SELECT and G.GAME.round_resets.blind_tags and G.blind_select then
         G.FUNCS.reroll_tags()
     end
 end
