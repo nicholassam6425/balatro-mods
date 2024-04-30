@@ -4,7 +4,6 @@ requires [UwUdev's Balamod mod loader](https://github.com/balamod/balamod/tree/m
 
 > [!WARNING]
 > ***STEAMODDED AND BALAMOD ARE NOT COMPATIBLE!!!!!!!!!!!!!!***
-> [!WARNING]
 
 i am begging you please stop asking why mods crash when you have both installed...
 
