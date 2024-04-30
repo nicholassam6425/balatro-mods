@@ -1,6 +1,12 @@
 # arachnei's balatro mods
 
-requires [UwUdev's Balamod mod loader](https://github.com/UwUDev/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from
+requires [UwUdev's Balamod mod loader](https://github.com/balamod/balamod/tree/master) OR [Steamo's Steamodded mod loader](https://github.com/Steamopollys/Steamodded/tree/main) depending on which folder you download from. 
+
+> [!WARNING]
+> ***STEAMODDED AND BALAMOD ARE NOT COMPATIBLE!!!!!!!!!!!!!!***
+> [!WARNING]
+
+i am begging you please stop asking why mods crash when you have both installed...
 
 - [Mods & APIs](#modsapis)
     - [Fortune](#fortune-httpsgithubcomnicholassam6425balatro-fortune)
