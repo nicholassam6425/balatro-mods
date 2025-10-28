@@ -24,6 +24,7 @@ i am begging you please stop asking why mods crash when you have both installed.
     - [macOS](#macos)
     - [Linux](#linux)
 - [Useful Documentation](#useful-documentation)
+- [WIP Mods](#wip-mods)
 
 # Mods/APIs
 
@@ -248,3 +249,13 @@ $XDG_DATA_HOME
 # Useful Documentation
 
 Moved to the [wiki](https://github.com/nicholassam6425/balatro-mods/wiki)
+
+# WIP Mods
+
+## Super Auto Balatro (https://github.com/nicholassam6425/super-auto-balatro)
+
+| Balamod | Steamodded |
+| ------- | ---------- |
+| ✔️ | planned |
+
+Mod that plans on adding 400+ cards and many new mechanics. (Looking for help for card art)
